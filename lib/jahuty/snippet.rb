@@ -1,12 +1,5 @@
-require "jahuty/snippet/data/problem"
-require "jahuty/snippet/data/snippet"
-require "jahuty/snippet/exception/not_ok"
-require "jahuty/snippet/service/get"
-require "jahuty/snippet/service/connect"
-require "jahuty/snippet/version"
-
 module Jahuty
-  module Snippet
+  class Snippet
     @@key
     @@get
 

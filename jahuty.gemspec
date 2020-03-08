@@ -1,17 +1,18 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "jahuty/snippet/version"
+
+require "jahuty"
 
 Gem::Specification.new do |spec|
-  spec.name          = "jahuty-snippet"
-  spec.version       = Jahuty::Snippet::VERSION
+  spec.name          = "jahuty"
+  spec.version       = Jahuty::VERSION
   spec.authors       = ["Jack Clayton"]
   spec.email         = ["jack@jahuty.com"]
 
-  spec.summary       = %q{Jahuty's API client.}
+  spec.summary       = %q{Jahuty's Ruby SDK.}
   spec.description   = %q{Turn any page into a content-managed page.}
-  spec.homepage      = "https://github.com/jahuty/snippets-ruby"
+  spec.homepage      = "https://github.com/jahuty/jahuty-ruby"
   spec.license       = "MIT"
 
   spec.files         = Dir.chdir(File.expand_path('..', __FILE__)) do
