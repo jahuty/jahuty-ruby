@@ -1,28 +1,24 @@
 require "json"
 
 module Jahuty
-  module Service
-    class Get
-      @connection
+  class Service::Get
+    @connection
 
-      def initialize(connection)
-        @connection = connection
+    def initialize(connection)
+      @connection = connection
 
+    end
+
+    def call(id)
+      response = @connection.get(id.to_s)
+
+      payload = JSON.parse(response.body, symbolize_names: true)
+
+      if response.status != 200
+        raise Exception::NotOk.new(Data::Problem.from(payload))
       end
 
-      def call(id)
-        response = @connection.get(id.to_s)
-
-        payload = JSON.parse(response.body, symbolize_names: true)
-
-        if response.status != 200
-          raise ::Jahuty::Exception::NotOk.new(
-            ::Jahuty::Data::Problem.from(payload)
-          )
-        end
-
-        return ::Jahuty::Data::Snippet.from(payload)
-      end
+      return Data::Snippet.from(payload)
     end
   end
 end

@@ -1,20 +1,13 @@
 module Jahuty
   class Snippet
-    @@key
     @@get
 
-    def self.key=(key)
-      @@key = key
-    end
-
     def self.get(id)
-      raise "API key not set. Did you use key=?" if @@key.nil?
+      raise "API key not set. Did you use Jahuty.key?" unless Jahuty.key?
 
-      @@get ||= Service::Get.new(Service::Connect.new.call(@@key))
+      @@get ||= Service::Get.new(Service::Connect.new.call(Jahuty.key))
 
-      snippet = @@get.call(id)
-
-      snippet.to_s
+      @@get.call(id)
     end
   end
 end
