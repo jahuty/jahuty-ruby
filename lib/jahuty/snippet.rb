@@ -1,27 +1,13 @@
-require "jahuty/snippet/data/problem"
-require "jahuty/snippet/data/snippet"
-require "jahuty/snippet/exception/not_ok"
-require "jahuty/snippet/service/get"
-require "jahuty/snippet/service/connect"
-require "jahuty/snippet/version"
-
 module Jahuty
-  module Snippet
-    @@key
+  class Snippet
     @@get
 
-    def self.key=(key)
-      @@key = key
-    end
-
     def self.get(id)
-      raise "API key not set. Did you use key=?" if @@key.nil?
+      raise "API key not set. Did you use Jahuty.key?" unless Jahuty.key?
 
-      @@get ||= Service::Get.new(Service::Connect.new.call(@@key))
+      @@get ||= Service::Get.new(Service::Connect.new.call(Jahuty.key))
 
-      snippet = @@get.call(id)
-
-      snippet.to_s
+      @@get.call(id)
     end
   end
 end

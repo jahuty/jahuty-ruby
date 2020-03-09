@@ -1,5 +1,5 @@
 require "bundler/setup"
-require "jahuty/snippet"
+require "jahuty"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
