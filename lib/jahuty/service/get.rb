@@ -6,11 +6,10 @@ module Jahuty
 
     def initialize(connection)
       @connection = connection
-
     end
 
-    def call(id)
-      response = @connection.get("snippets/#{id}")
+    def call(id, params = {})
+      response = @connection.get("snippets/#{id}", { params: params })
 
       payload = JSON.parse(response.body, symbolize_names: true)
 
