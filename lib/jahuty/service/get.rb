@@ -10,7 +10,7 @@ module Jahuty
     end
 
     def call(id)
-      response = @connection.get(id.to_s)
+      response = @connection.get("snippets/#{id}")
 
       payload = JSON.parse(response.body, symbolize_names: true)
 
