@@ -65,6 +65,34 @@ Jahuty.key = "YOUR_API_KEY"
 </body>
 ```
 
+## Parameters
+
+You can [pass parameters](https://www.jahuty.com/docs/passing-a-parameter) into your snippet with an optional second argument:
+
+```ruby
+require "jahuty"
+
+Snippet.get(YOUR_SNIPPET_ID, {
+  foo:   "bar",
+  baz:   ["qux", "quux"],
+  corge: {
+    grault: {
+      garply: "waldo"
+    }
+  }
+});
+```
+
+The parameters above would be equivalent to [assigning the variables](https://www.jahuty.com/docs/assigning-a-variable) below in your snippet:
+
+```html
+{% assign foo = "bar" %}
+{% assign baz = ["qux", "quux"] %}
+{% assign corge.grault.garply = "waldo" %}
+```
+
+## Errors
+
 If you don't set your API key before calling `Snippet.get`, a `StandardError` will be raised. If an error occurs with [Jahuty's API](https://www.jahuty.com/docs/api), a `NotOk` exception will be raised:
 
 ```ruby
