@@ -10,7 +10,7 @@ It is multi-platform, and we strive to make it run equally well on Windows, Linu
 Add this line to your application's `Gemfile`:
 
 ```ruby
-gem "jahuty", "~> 1.0"
+gem "jahuty", "~> 2.0"
 ```
 
 And then execute:
