@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change optional second argument of `Snippet.render` from `params` hash to options hash with `params` key.
 - Change `Data::Snippet` to `Data::Render`.
 - Remove `id` attribute from `Data::Render`.
+- Change API endpoint to `snippets/:id/render`.
 
 ## 1.1.2 - 2020-07-04
 
