@@ -3,7 +3,7 @@ require "jahuty/version"
 require "jahuty/snippet"
 
 require "jahuty/data/problem"
-require "jahuty/data/snippet"
+require "jahuty/data/render"
 
 require "jahuty/exception/not_ok"
 

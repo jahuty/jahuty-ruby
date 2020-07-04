@@ -51,7 +51,7 @@ module Jahuty
         let(:body)   { '{"id": 1, "content": "foo"}' }
 
         it "returns a snippet" do
-          expect(subject.call(1)).to be_instance_of(Data::Snippet)
+          expect(subject.call(1)).to be_instance_of(Data::Render)
         end
       end
     end

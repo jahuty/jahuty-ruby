@@ -19,7 +19,7 @@ module Jahuty
         raise Exception::NotOk.new(Data::Problem.from(payload))
       end
 
-      return Data::Snippet.from(payload)
+      return Data::Render.from(payload)
     end
   end
 end

@@ -35,14 +35,14 @@ With the API key set, you can use the `Snippet.render` method to render a snippe
 require "jahuty"
 
 # retrieve the snippet
-snippet = Snippet.render YOUR_SNIPPET_ID
+render = Snippet.render YOUR_SNIPPET_ID
 
 # convert it to a string
-snippet.to_s
+render.to_s
 
 # or, access its attributes
-snippet.id
-snippet.content
+render.id
+render.content
 ```
 
 In an HTML view:

@@ -7,9 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.0.0 - 2020-07-04
 
-- Change `service/get` to `service/render`.
+- Change `Service::Get` to `Service::Render`.
 - Change `Snippet.get` to `Snippet.render`.
 - Change optional second argument of `Snippet.render` from `params` hash to options hash with `params` key.
+- Change `Data::Snippet` to `Data::Render`.
 
 ## 1.1.2 - 2020-07-04
 
