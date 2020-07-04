@@ -1,5 +1,5 @@
 # jahuty-ruby
-Welcome [Jahuty's](https://www.jahuty.com) Ruby SDK!
+Welcome to [Jahuty's](https://www.jahuty.com) Ruby SDK!
 
 ## Installation
 
@@ -7,7 +7,7 @@ This library requires [Ruby 2.3+](https://www.ruby-lang.org/en/downloads/release
 
 It is multi-platform, and we strive to make it run equally well on Windows, Linux, and OSX.
 
-Add this line to your application's `Gemfile`, where `x` is the latest major version number:
+Add this line to your application's `Gemfile`:
 
 ```ruby
 gem "jahuty", "~> 1.0"
@@ -29,15 +29,13 @@ require "jahuty"
 Jahuty.key = "YOUR_API_KEY"
 ```
 
-With the API key set, you can use the `get()` method to retrieve a snippet:
-
-Then, use the `.get` method to fetch a snippet:
+With the API key set, you can use the `Snippet.render` method to render a snippet:
 
 ```ruby
 require "jahuty"
 
 # retrieve the snippet
-snippet = Snippet.get YOUR_SNIPPET_ID
+snippet = Snippet.render YOUR_SNIPPET_ID
 
 # convert it to a string
 snippet.to_s
@@ -61,7 +59,7 @@ Jahuty.key = "YOUR_API_KEY"
     <title>Awesome example</title>
 </head>
 <body>
-    <%= Snippet.get YOUR_SNIPPET_ID %>
+    <%= Snippet.render YOUR_SNIPPET_ID %>
 </body>
 ```
 
@@ -72,7 +70,7 @@ You can [pass parameters](https://www.jahuty.com/docs/passing-a-parameter) into 
 ```ruby
 require "jahuty"
 
-Snippet.get(YOUR_SNIPPET_ID, {
+Snippet.render(YOUR_SNIPPET_ID, {
   foo:   "bar",
   baz:   ["qux", "quux"],
   corge: {
@@ -93,13 +91,13 @@ The parameters above would be equivalent to [assigning the variables](https://ww
 
 ## Errors
 
-If you don't set your API key before calling `Snippet.get`, a `StandardError` will be raised. If an error occurs with [Jahuty's API](https://www.jahuty.com/docs/api), a `NotOk` exception will be raised:
+If you don't set your API key before calling `Snippet.render`, a `StandardError` will be raised. If an error occurs with [Jahuty's API](https://www.jahuty.com/docs/api), a `NotOk` exception will be raised:
 
 ```ruby
 require "jahuty"
 
 begin
-  Snippet.get YOUR_SNIPPET_ID
+  Snippet.render YOUR_SNIPPET_ID
 rescue StandardError => e
   # hmm, did you set the API key first?
 rescue Jahuty::Exception::NotOk => e

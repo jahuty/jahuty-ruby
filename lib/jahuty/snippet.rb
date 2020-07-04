@@ -3,7 +3,7 @@ module Jahuty
     @get
 
     class << self
-      def get(id, params = {})
+      def render(id, params = {})
         raise "API key not set. Did you use Jahuty.key?" unless Jahuty.key?
 
         @get ||= Service::Render.new(Service::Connect.new.call(Jahuty.key))

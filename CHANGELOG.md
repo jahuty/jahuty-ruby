@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.0.0 - 2020-07-04
 
 - Change `service/get` to `service/render`.
+- Change `Snippet.get` to `Snippet.render`.
 
 ## 1.1.2 - 2020-07-04
 
