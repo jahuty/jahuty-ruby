@@ -65,28 +65,18 @@ Jahuty.key = "YOUR_API_KEY"
 
 ## Parameters
 
-You can [pass parameters](https://www.jahuty.com/docs/passing-a-parameter) into your snippet with an optional second argument:
+You can [pass parameters](https://www.jahuty.com/docs/passing-a-parameter) into your snippet using the `params` key of the options hash:
 
 ```ruby
 require "jahuty"
 
-Snippet.render(YOUR_SNIPPET_ID, {
-  foo:   "bar",
-  baz:   ["qux", "quux"],
-  corge: {
-    grault: {
-      garply: "waldo"
-    }
-  }
-});
+Snippet.render(YOUR_SNIPPET_ID, params: { foo: "bar" });
 ```
 
 The parameters above would be equivalent to [assigning the variables](https://www.jahuty.com/docs/assigning-a-variable) below in your snippet:
 
 ```html
 {% assign foo = "bar" %}
-{% assign baz = ["qux", "quux"] %}
-{% assign corge.grault.garply = "waldo" %}
 ```
 
 ## Errors

@@ -8,10 +8,10 @@ module Jahuty
       @connection = connection
     end
 
-    def call(id, params = {})
-      options = { params: params.to_json } if !params.empty?
+    def call(id, options = {})
+      settings = { params: options[:params].to_json } unless options[:params].nil?
 
-      response = @connection.get("snippets/#{id}", options || {})
+      response = @connection.get("snippets/#{id}", settings || {})
 
       payload = JSON.parse(response.body, symbolize_names: true)
 
