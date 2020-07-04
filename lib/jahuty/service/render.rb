@@ -1,7 +1,7 @@
 require "json"
 
 module Jahuty
-  class Service::Get
+  class Service::Render
     @connection
 
     def initialize(connection)

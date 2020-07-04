@@ -8,7 +8,7 @@ require "jahuty/data/snippet"
 require "jahuty/exception/not_ok"
 
 require "jahuty/service/connect"
-require "jahuty/service/get"
+require "jahuty/service/render"
 
 module Jahuty
   @key
