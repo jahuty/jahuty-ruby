@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.0.0 - 2020-07-04
+
+- Change `Service::Get` to `Service::Render`.
+- Change `Snippet.get` to `Snippet.render`.
+- Change optional second argument of `Snippet.render` from `params` hash to options hash with `params` key.
+- Change `Data::Snippet` to `Data::Render`.
+- Remove `id` attribute from `Data::Render`.
+- Change API endpoint to `snippets/:id/render`.
+
 ## 1.1.2 - 2020-07-04
 
 - Change the Faraday gem from `~> 0.1` to `~> 1.0`.

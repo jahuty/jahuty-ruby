@@ -3,12 +3,12 @@ require "jahuty/version"
 require "jahuty/snippet"
 
 require "jahuty/data/problem"
-require "jahuty/data/snippet"
+require "jahuty/data/render"
 
 require "jahuty/exception/not_ok"
 
 require "jahuty/service/connect"
-require "jahuty/service/get"
+require "jahuty/service/render"
 
 module Jahuty
   @key

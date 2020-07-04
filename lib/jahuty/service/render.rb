@@ -1,17 +1,17 @@
 require "json"
 
 module Jahuty
-  class Service::Get
+  class Service::Render
     @connection
 
     def initialize(connection)
       @connection = connection
     end
 
-    def call(id, params = {})
-      options = { params: params.to_json } if !params.empty?
+    def call(id, options = {})
+      settings = { params: options[:params].to_json } unless options[:params].nil?
 
-      response = @connection.get("snippets/#{id}", options || {})
+      response = @connection.get("snippets/#{id}/render", settings || {})
 
       payload = JSON.parse(response.body, symbolize_names: true)
 
@@ -19,7 +19,7 @@ module Jahuty
         raise Exception::NotOk.new(Data::Problem.from(payload))
       end
 
-      return Data::Snippet.from(payload)
+      return Data::Render.from(payload)
     end
   end
 end

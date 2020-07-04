@@ -1,5 +1,5 @@
 module Jahuty
-  RSpec.describe Service::Get do
+  RSpec.describe Service::Render do
     describe "#call" do
       let(:response) do
         response = instance_double(::Faraday::Response)
@@ -20,7 +20,7 @@ module Jahuty
 
       let(:body) { '{ "status": 1, "type": "foo", "detail": "bar" }' }
 
-      subject { Service::Get.new(connection) }
+      subject { Service::Render.new(connection) }
 
       context "when the response's status code is 401" do
         let(:status) { 401 }
@@ -51,7 +51,7 @@ module Jahuty
         let(:body)   { '{"id": 1, "content": "foo"}' }
 
         it "returns a snippet" do
-          expect(subject.call(1)).to be_instance_of(Data::Snippet)
+          expect(subject.call(1)).to be_instance_of(Data::Render)
         end
       end
     end

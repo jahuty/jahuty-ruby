@@ -1,18 +1,16 @@
 module Jahuty
   module Data
-    class Snippet
-      attr_accessor :id, :content
+    class Render
+      attr_accessor :content
 
-      def initialize(id, content)
-        @id      = id
+      def initialize(content)
         @content = content
       end
 
       def self.from(data)
-        raise ArgumentError.new "Key :id does not exist" if !data.key?(:id)
         raise ArgumentError.new "Key :content does not exist" if !data.key?(:content)
 
-        Snippet.new(data[:id], data[:content])
+        Render.new(data[:content])
       end
 
       def to_s
