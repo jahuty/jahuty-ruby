@@ -5,7 +5,7 @@ module Jahuty
 
       it "returns content" do
         expect(Snippet.render(1)).to have_attributes({
-          id: 1, content: "This is my first snippet!"
+          content: "This is my first snippet!"
         })
       end
     end

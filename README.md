@@ -41,7 +41,6 @@ render = Snippet.render YOUR_SNIPPET_ID
 render.to_s
 
 # or, access its attributes
-render.id
 render.content
 ```
 
