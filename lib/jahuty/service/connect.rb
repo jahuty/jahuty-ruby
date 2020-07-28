@@ -3,7 +3,7 @@ require "faraday"
 module Jahuty
   module Service
     class Connect
-      URL = "https://www.jahuty.com/api"
+      URL = "https://api.jahuty.com"
 
       HEADERS  = {
         "Accept":          "application/json;q=0.9,*/*;q=0.8",
