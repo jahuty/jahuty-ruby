@@ -1,6 +1,10 @@
 require "bundler/setup"
 require "jahuty"
 
+require "webmock/rspec"
+WebMock.enable!
+WebMock.disable_net_connect!
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
