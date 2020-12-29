@@ -1,6 +1,6 @@
 module Jahuty
   module Exception
-    class NotOk < ::StandardError
+    class Error < ::StandardError
       attr_reader :problem
 
       def initialize(problem)
