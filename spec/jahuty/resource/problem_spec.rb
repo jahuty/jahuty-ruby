@@ -1,25 +1,23 @@
 module Jahuty
   module Resource
     RSpec.describe Problem do
-      describe ".from" do
-        let(:payload) { { status: 1, type: "foo", detail: "bar" } }
+      describe "#initialize" do
+        let(:status) { 404 }
+        let(:type)   { "foo" }
+        let(:detail) { "bar" }
 
-        it "raises error if :status does not exist" do
-          payload.delete(:status)
+        subject(:problem) { Problem.new(status: status, type: type, detail: detail) }
 
-          expect{ Problem.from(payload) }.to raise_error(ArgumentError)
+        it "sets status" do
+          expect(problem.status).to eq(status)
         end
 
-        it "raises error if :type does not exist" do
-          payload.delete(:type)
-
-          expect{ Problem.from(payload) }.to raise_error(ArgumentError)
+        it "sets type" do
+          expect(problem.type).to eq(type)
         end
 
-        it "raises error if :detail does not exist" do
-          payload.delete(:detail)
-
-          expect{ Problem.from(payload) }.to raise_error(ArgumentError)
+        it "sets detail" do
+          expect(problem.detail).to eq(detail)
         end
       end
     end

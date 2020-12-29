@@ -1,19 +1,19 @@
 module Jahuty
   module Resource
     RSpec.describe Render do
-      describe ".from" do
-        let(:payload) { { content: "foo" } }
+      let(:content) { "foo" }
 
-        it "raises error if :content key does not exist" do
-          payload.delete(:content)
+      subject(:render) { Render.new(content: "foo") }
 
-          expect{ Render.from(payload) }.to raise_error(ArgumentError)
+      describe "#initialize" do
+        it "sets content" do
+          expect(render.content).to eq(content)
         end
       end
 
       describe "#to_s" do
         it "returns content" do
-          expect(Render.new(content: "foo").to_s).to eq("foo")
+          expect(render.to_s).to eq(content)
         end
       end
     end

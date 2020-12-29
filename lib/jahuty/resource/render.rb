@@ -7,10 +7,6 @@ module Jahuty
         @content = content
       end
 
-      def self.from(payload)
-        Render.new(**payload)
-      end
-
       def to_s
         @content
       end

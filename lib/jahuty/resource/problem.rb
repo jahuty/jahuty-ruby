@@ -8,10 +8,6 @@ module Jahuty
         @type   = type
         @detail = detail
       end
-
-      def self.from(payload)
-        Problem.new(**payload)
-      end
     end
   end
 end
