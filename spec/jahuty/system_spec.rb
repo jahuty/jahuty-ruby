@@ -6,7 +6,7 @@ module Jahuty
 
     describe "when snippet exists" do
       let(:client) do
-        Client.new('kn2Kj5ijmT2pH6ZKqAQyNexUqKeRM4VG6DDgWN1lIcc')
+        Client.new(api_key: "kn2Kj5ijmT2pH6ZKqAQyNexUqKeRM4VG6DDgWN1lIcc")
       end
 
       it "returns content" do
