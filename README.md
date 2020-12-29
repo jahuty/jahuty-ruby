@@ -13,12 +13,6 @@ Add this line to your application's `Gemfile`:
 gem "jahuty", "~> 2.0"
 ```
 
-And then execute:
-
-```bash
-$ bundle
-```
-
 ## Usage
 
 Before use, the library needs to be configured with your [API key](https://www.jahuty.com/docs/api#authentication) (ideally, once during startup):
