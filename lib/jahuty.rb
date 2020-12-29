@@ -1,23 +1,25 @@
 require "jahuty/version"
 
-require "jahuty/snippet"
+require "jahuty/action/base"
+require "jahuty/action/show"
 
-require "jahuty/data/problem"
-require "jahuty/data/render"
+require "jahuty/api/client"
 
-require "jahuty/exception/not_ok"
+require "jahuty/exception/error"
 
-require "jahuty/service/connect"
-require "jahuty/service/render"
+require "jahuty/request/base"
+require "jahuty/request/factory"
+
+require "jahuty/resource/problem"
+require "jahuty/resource/render"
+require "jahuty/resource/factory"
+
+require "jahuty/service/base"
+require "jahuty/service/snippet"
+require "jahuty/service/factory"
+
+require "jahuty/client"
 
 module Jahuty
-  @key
-
-  class << self
-    attr_accessor :key
-
-    def key?
-      !(@key.nil? || @key.empty?)
-    end
-  end
+  BASE_URI = "https://api.jahuty.com"
 end
