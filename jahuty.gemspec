@@ -2,7 +2,7 @@
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-require "jahuty"
+require "jahuty/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "jahuty"
@@ -12,8 +12,14 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Jahuty's Ruby SDK.}
   spec.description   = %q{Turn any page into a content-managed page.}
-  spec.homepage      = "https://github.com/jahuty/jahuty-ruby"
+  spec.homepage      = "https://www.jahuty.com"
   spec.license       = "MIT"
+
+  spec.metadata["allowed_push_host"] = "https://rubygems.org"
+
+  spec.metadata["homepage_uri"] = spec.homepage
+  spec.metadata["source_code_uri"] = "https://github.com/jahuty/jahuty-ruby"
+  spec.metadata["changelog_uri"] = "https://github.com/jahuty/jahuty-ruby/blob/master/CHANGELOG.md"
 
   spec.files         = Dir.chdir(File.expand_path('..', __FILE__)) do
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
