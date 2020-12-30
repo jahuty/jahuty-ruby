@@ -14,30 +14,32 @@ module Jahuty
         @services = {}
       end
 
-      def method_missing(name, *arguments)
-        return unless arguments.empty?
+      def method_missing(name, *args, &block)
+        if args.empty? && class_name?(name)
+          unless @services.key?(name)
+            klass   = class_name(name)
+            service = Object.const_get(klass).send(:new, client: @client)
+            @services[name] = service
+          end
 
-        service_name = name.to_sym
-
-        unless @services.key?(service_name)
-          service_class = class_name(service_name)
-          service = Object.const_get(service_class).send(:new, client: @client)
-          @services[service_name] = service
+          @services[name]
+        else
+          super
         end
-
-        @services[service_name]
       end
 
       def respond_to_missing?(name, include_private = false)
-        CLASSES.key?(name) || super
+        class_name(name) || super
       end
 
       private
 
       def class_name(service_name)
-        raise ArgumentError, "Service '#{service_name}' not found" unless CLASSES.key?(service_name)
-
         CLASSES[service_name]
+      end
+
+      def class_name?(service_name)
+        CLASSES.key?(service_name)
       end
     end
   end
