@@ -3,7 +3,7 @@ module Jahuty
     class Factory
       def call(action)
         Base.new(
-          method: "get",
+          method: 'get',
           path:   "snippets/#{action.id}/render",
           params: action.params
         )

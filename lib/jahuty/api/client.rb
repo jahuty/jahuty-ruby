@@ -4,10 +4,10 @@ module Jahuty
   module Api
     class Client
       HEADERS = {
-        "Accept"          => "application/json;q=0.9,*/*;q=0.8",
-        "Accept-Encoding" => "gzip, deflate",
-        "Content-Type"    => "application/json; charset=utf-8",
-        "User-Agent"      => "Jahuty Ruby SDK v#{::Jahuty::VERSION}"
+        'Accept'          => 'application/json;q=0.9,*/*;q=0.8',
+        'Accept-Encoding' => 'gzip, deflate',
+        'Content-Type'    => 'application/json; charset=utf-8',
+        'User-Agent'      => "Jahuty Ruby SDK v#{::Jahuty::VERSION}"
       }
 
       def initialize(api_key:)
@@ -30,7 +30,7 @@ module Jahuty
       private
 
       def headers
-        { "Authorization" => "Bearer #{@api_key}" }.merge(HEADERS)
+        { 'Authorization' => "Bearer #{@api_key}" }.merge(HEADERS)
       end
     end
   end

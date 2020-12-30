@@ -1,8 +1,8 @@
 module Jahuty
   module Api
     RSpec.describe Client do
-      describe "#send" do
-        let(:api_key) { "foo" }
+      describe '#send' do
+        let(:api_key) { 'foo' }
         let(:version) { ::Jahuty::VERSION }
 
         before do
@@ -19,7 +19,7 @@ module Jahuty
         end
 
         it "returns response" do
-          request = ::Jahuty::Request::Base.new(method: "get", path: "foo")
+          request = ::Jahuty::Request::Base.new(method: 'get', path: 'foo')
 
           client = Client.new(api_key: api_key)
 

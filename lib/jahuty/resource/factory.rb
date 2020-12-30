@@ -14,11 +14,11 @@ module Jahuty
         elsif problem? response
           resource_name = 'problem'
         else
-          raise ArgumentError.new("Unexpected response")
+          raise ArgumentError.new('Unexpected response')
         end
 
         resource_class = class_name(resource_name.to_sym)
-        
+
         payload = parse(response)
 
         Object.const_get(resource_class).send(:new, **payload)
@@ -31,7 +31,7 @@ module Jahuty
       end
 
       def problem?(response)
-        response.headers["Content-Type"] == "application/problem+json"
+        response.headers['Content-Type'] == 'application/problem+json'
       end
 
       def parse(response)
