@@ -17,6 +17,9 @@ jobs:
           command: bundle -v
       - ruby/bundle-install
       - run:
+          name: Run rubocop
+          command: bundle exec rake rubocop
+      - run:
           name: Run specs
           command: |
             bundle exec rspec --profile 10 \
