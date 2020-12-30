@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jahuty
   class Client
     @api_key

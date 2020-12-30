@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jahuty
   RSpec.describe 'System tests' do
     before { WebMock.enable_net_connect! }

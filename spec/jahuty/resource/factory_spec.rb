@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jahuty
   module Resource
     RSpec.describe Factory do

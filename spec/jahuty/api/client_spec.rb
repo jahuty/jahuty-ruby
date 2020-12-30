@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jahuty
   module Api
     RSpec.describe Client do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jahuty
   RSpec.describe Client do
     let(:action) { Action::Show.new(resource: 'render', id: 1) }

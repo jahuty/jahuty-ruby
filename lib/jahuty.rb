@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'jahuty/version'
 
 require 'jahuty/action/base'

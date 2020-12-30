@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/jahuty/jahuty-ruby.svg?style=svg)](https://circleci.com/gh/jahuty/jahuty-ruby)
+
 # jahuty-ruby
 Welcome to [Jahuty's](https://www.jahuty.com) Ruby SDK!
 

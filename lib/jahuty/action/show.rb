@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jahuty
   module Action
     class Show < Base
