@@ -1,56 +1,50 @@
+[![CircleCI](https://circleci.com/gh/jahuty/jahuty-ruby.svg?style=svg)](https://circleci.com/gh/jahuty/jahuty-ruby) [![codecov](https://codecov.io/gh/jahuty/jahuty-ruby/branch/master/graph/badge.svg?token=NLDCGGYB8S)](https://codecov.io/gh/jahuty/jahuty-ruby) [![Ruby Style Guide](https://img.shields.io/badge/code_style-rubocop-brightgreen.svg)](https://github.com/rubocop-hq/rubocop)
+
 # jahuty-ruby
-Welcome to [Jahuty's](https://www.jahuty.com) Ruby SDK!
+
+Welcome to the [Ruby SDK](https://docs.jahuty.com/sdks/ruby) for [Jahuty's API](https://docs.jahuty.com/api)!
 
 ## Installation
 
-This library requires [Ruby 2.3+](https://www.ruby-lang.org/en/downloads/releases/).
+This library requires [Ruby 2.6+](https://www.ruby-lang.org/en/downloads/releases/).
 
 It is multi-platform, and we strive to make it run equally well on Windows, Linux, and OSX.
 
 Add this line to your application's `Gemfile`:
 
 ```ruby
-gem "jahuty", "~> 2.0"
-```
-
-And then execute:
-
-```bash
-$ bundle
+gem 'jahuty', '~> 3.0'
 ```
 
 ## Usage
 
-Before use, the library needs to be configured with your [API key](https://www.jahuty.com/docs/api#authentication) (ideally, once during startup):
+Instantiate the client with your [API key](https://docs.jahuty.com/api#authentication) and use `snippets.render()` to render your snippet:
 
 ```ruby
-require "jahuty"
+jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
 
-Jahuty.key = "YOUR_API_KEY"
+puts jahuty.snippets.render(YOUR_SNIPPET_ID)
 ```
 
-With the API key set, you can use the `Snippet.render` method to render a snippet:
+You can also access the render's content with `to_s` or `content`:
 
 ```ruby
-require "jahuty"
+jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
 
-# retrieve the snippet
-render = Snippet.render YOUR_SNIPPET_ID
+render = jahuty.snippets.render(YOUR_SNIPPET_ID)
 
-# convert it to a string
-render.to_s
+a = render.to_s
 
-# or, access its attributes
-render.content
+b = render.content
+
+a == b  # returns true
 ```
 
 In an HTML view:
 
 ```html+erb
 <%-
-require "jahuty"  
-
-Jahuty.key = "YOUR_API_KEY"
+  jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
 %>
 <!doctype html>
 <html>
@@ -58,21 +52,21 @@ Jahuty.key = "YOUR_API_KEY"
     <title>Awesome example</title>
 </head>
 <body>
-    <%= Snippet.render YOUR_SNIPPET_ID %>
+    <%= jahuty.snippets.render YOUR_SNIPPET_ID %>
 </body>
 ```
 
 ## Parameters
 
-You can [pass parameters](https://www.jahuty.com/docs/passing-a-parameter) into your snippet using the `params` key of the options hash:
+You can [pass parameters](https://docs.jahuty.com/liquid/parameters) into your snippet using the `params` option:
 
 ```ruby
-require "jahuty"
+jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
 
-Snippet.render(YOUR_SNIPPET_ID, params: { foo: "bar" });
+jahuty.snippets.render(YOUR_SNIPPET_ID, params: { foo: 'bar' });
 ```
 
-The parameters above would be equivalent to [assigning the variables](https://www.jahuty.com/docs/assigning-a-variable) below in your snippet:
+The parameters above would be equivalent to [assigning the variable](https://docs.jahuty.com/liquid/variables) below in your snippet:
 
 ```html
 {% assign foo = "bar" %}
@@ -80,17 +74,16 @@ The parameters above would be equivalent to [assigning the variables](https://ww
 
 ## Errors
 
-If you don't set your API key before calling `Snippet.render`, a `StandardError` will be raised. If an error occurs with [Jahuty's API](https://www.jahuty.com/docs/api), a `NotOk` exception will be raised:
+If an error occurs with [Jahuty's API](https://docs.jahuty.com/api#errors), a `Jahuty::Exception::Error` will be raised:
 
 ```ruby
-require "jahuty"
+require 'jahuty'
 
 begin
-  Snippet.render YOUR_SNIPPET_ID
-rescue StandardError => e
-  # hmm, did you set the API key first?
-rescue Jahuty::Exception::NotOk => e
-  # hmm, the API returned something besides 2xx status code
+  jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
+  jahuty.snippets.render YOUR_SNIPPET_ID
+rescue Jahuty::Exception::Error => e
+  # The API returned an error. See the error's problem for details.
   puts e.problem.type    # a URL to more information
   puts e.problem.status  # the status code
   puts e.problem.detail  # a description of the error

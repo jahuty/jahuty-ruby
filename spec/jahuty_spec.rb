@@ -1,20 +1,11 @@
-RSpec.describe Jahuty do
-  before { Jahuty.key = nil }
-  after  { Jahuty.key = nil }
+# frozen_string_literal: true
 
-  it "has a version number" do
+RSpec.describe Jahuty do
+  it 'has a version number' do
     expect(Jahuty::VERSION).not_to be nil
   end
 
-  describe "::key?" do
-    it "returns true if key exists" do
-      Jahuty.key = "foo"
-
-      expect(Jahuty.key?).to be_truthy
-    end
-
-    it "returns false if key does not exist" do
-      expect(Jahuty.key?).to be_falsy
-    end
+  it 'has a base uri' do
+    expect(Jahuty::BASE_URI).not_to be nil
   end
 end
