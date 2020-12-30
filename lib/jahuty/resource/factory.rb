@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
-require "json"
+require 'json'
 
 module Jahuty
   module Resource
+    # Negotiates the resource to return given the requested action and the
+    # server's response.
     class Factory
       CLASSES = {
         problem: Problem.name,
-        render:  Render.name
-      }
+        render: Render.name
+      }.freeze
 
       def call(action, response)
         if success? response
@@ -16,7 +18,7 @@ module Jahuty
         elsif problem? response
           resource_name = 'problem'
         else
-          raise ArgumentError.new('Unexpected response')
+          raise ArgumentError, 'Unexpected response'
         end
 
         resource_class = class_name(resource_name.to_sym)

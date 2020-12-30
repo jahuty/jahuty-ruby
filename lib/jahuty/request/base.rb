@@ -2,6 +2,7 @@
 
 module Jahuty
   module Request
+    # Provides common logic for all requests.
     class Base
       attr_accessor :method, :path, :params
 

@@ -4,43 +4,39 @@ module Jahuty
   module Service
     RSpec.describe Snippet do
       describe '#render' do
-        it 'requests action' do
+        subject(:snippet) do
+          described_class.new(client: client)
+        end
+
+        let(:client) do
           client = instance_double('::Jahuty::Client')
 
-          expect(client).to receive(:request).with(
-            having_attributes(id: 1, resource: 'render')
-          )
+          allow(client).to receive(:request)
 
-          service = Snippet.new(client: client)
-
-          service.render(1)
+          client
         end
 
         context 'when params do not exist' do
+          let(:expected_attr) { { id: 1, resource: 'render', params: {} } }
+
           it 'does not include params' do
-            client = instance_double('::Jahuty::Client')
+            snippet.render(1)
 
-            expect(client).to receive(:request).with(
-              having_attributes(params: {})
-            )
-
-            service = Snippet.new(client: client)
-
-            service.render(1)
+            expect(client).to have_received(:request)
+              .with(having_attributes(expected_attr))
           end
         end
 
-        context 'when params do not exist' do
+        context 'when params do exist' do
+          let(:expected_attr) do
+            { id: 1, resource: 'render', params: { params: '{"foo":"bar"}' } }
+          end
+
           it 'does include params' do
-            client = instance_double('::Jahuty::Client')
+            snippet.render(1, { params: { foo: 'bar' } })
 
-            expect(client).to receive(:request).with(
-              having_attributes(params: { params: '{"foo":"bar"}' })
-            )
-
-            service = Snippet.new(client: client)
-
-            service.render(1, { params: { foo: 'bar' } })
+            expect(client).to have_received(:request)
+              .with(having_attributes(expected_attr))
           end
         end
       end

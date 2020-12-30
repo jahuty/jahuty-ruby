@@ -4,10 +4,10 @@ module Jahuty
   module Resource
     RSpec.describe Factory do
       describe '#call' do
+        subject(:factory) { described_class.new }
+
         # A valid action.
         let(:action) { ::Jahuty::Action::Show.new(id: 1, resource: 'render') }
-
-        subject(:factory) { Factory.new }
 
         context 'with the requested resource' do
           let(:response) do
@@ -35,9 +35,7 @@ module Jahuty
           end
 
           it 'raises error' do
-            expect {
-              factory.call(action, response)
-            }.to raise_error(JSON::ParserError)
+            expect { factory.call(action, response) }.to raise_error(JSON::ParserError)
           end
         end
 
@@ -46,8 +44,9 @@ module Jahuty
             headers = instance_double('::Faraday::Headers')
 
             # The Content-Type header indicates a problem resource.
-            allow(headers).to receive(:[]).with('Content-Type').
-              and_return('application/problem+json')
+            allow(headers).to receive(:[])
+              .with('Content-Type')
+              .and_return('application/problem+json')
 
             response = instance_double('::Faraday::Response')
 
@@ -70,8 +69,9 @@ module Jahuty
             headers = instance_double('::Faraday::Headers')
 
             # Use any Content-Type, except application/problem+json.
-            allow(headers).to receive(:[]).with('Content-Type').
-              and_return('text/plain')
+            allow(headers).to receive(:[])
+              .with('Content-Type')
+              .and_return('text/plain')
 
             response = instance_double('::Faraday::Response')
 
@@ -84,9 +84,7 @@ module Jahuty
           end
 
           it 'raises error' do
-            expect {
-              factory.call(action, response)
-            }.to raise_error(ArgumentError)
+            expect { factory.call(action, response) }.to raise_error(ArgumentError)
           end
         end
       end

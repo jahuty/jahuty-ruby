@@ -1,20 +1,22 @@
 # frozen_string_literal: true
 
 module Jahuty
-  RSpec.describe 'System tests' do
+  RSpec.describe Client do
     before { WebMock.enable_net_connect! }
 
     after { WebMock.disable_net_connect! }
 
     describe 'when snippet exists' do
       let(:client) do
-        Client.new(api_key: 'kn2Kj5ijmT2pH6ZKqAQyNexUqKeRM4VG6DDgWN1lIcc')
+        described_class.new(
+          api_key: 'kn2Kj5ijmT2pH6ZKqAQyNexUqKeRM4VG6DDgWN1lIcc'
+        )
       end
 
       it 'returns content' do
-        expect(client.snippets.render(1)).to have_attributes({
+        expect(client.snippets.render(1)).to have_attributes(
           content: '<p>This is my first snippet!</p>'
-        })
+        )
       end
     end
   end

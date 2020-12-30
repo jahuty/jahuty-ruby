@@ -4,9 +4,9 @@ module Jahuty
   module Request
     RSpec.describe Factory do
       describe '#call' do
-        let(:action) { ::Jahuty::Action::Show.new(id: 1, resource: 'foo') }
+        subject(:factory) { described_class.new }
 
-        subject(:factory) { Factory.new }
+        let(:action) { ::Jahuty::Action::Show.new(id: 1, resource: 'foo') }
 
         it 'returns request' do
           expect(factory.call(action)).to be_instance_of(Base)

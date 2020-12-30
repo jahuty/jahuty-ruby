@@ -3,9 +3,9 @@
 module Jahuty
   module Resource
     RSpec.describe Render do
-      let(:content) { 'foo' }
+      subject(:render) { described_class.new(content: 'foo') }
 
-      subject(:render) { Render.new(content: 'foo') }
+      let(:content) { 'foo' }
 
       describe '#initialize' do
         it 'sets content' do

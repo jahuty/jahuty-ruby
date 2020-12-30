@@ -4,11 +4,13 @@ module Jahuty
   module Resource
     RSpec.describe Problem do
       describe '#initialize' do
+        subject(:problem) do
+          described_class.new(status: status, type: type, detail: detail)
+        end
+
         let(:status) { 404 }
         let(:type)   { 'foo' }
         let(:detail) { 'bar' }
-
-        subject(:problem) { Problem.new(status: status, type: type, detail: detail) }
 
         it 'sets status' do
           expect(problem.status).to eq(status)

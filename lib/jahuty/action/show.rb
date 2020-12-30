@@ -2,6 +2,7 @@
 
 module Jahuty
   module Action
+    # Displays a specific resource.
     class Show < Base
       attr_accessor :id
 

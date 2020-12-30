@@ -2,6 +2,7 @@
 
 module Jahuty
   module Action
+    # Provides common logic for service actions.
     class Base
       attr_accessor :resource, :params
 

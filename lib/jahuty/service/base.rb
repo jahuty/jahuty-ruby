@@ -2,9 +2,8 @@
 
 module Jahuty
   module Service
+    # Provides common logic to services.
     class Base
-      @client
-
       def initialize(client:)
         @client = client
       end
