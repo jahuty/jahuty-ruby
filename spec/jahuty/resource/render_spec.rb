@@ -18,6 +18,16 @@ module Jahuty
           expect(render.to_s).to eq(content)
         end
       end
+
+      describe 'serialization' do
+        it 'does not raise error' do
+          expect { Marshal.load(Marshal.dump(render)) }.not_to raise_error(::TypeError)
+        end
+
+        it 'has correct attributes' do
+          expect(Marshal.load(Marshal.dump(render))).to have_attributes(content: 'foo')
+        end
+      end
     end
   end
 end
