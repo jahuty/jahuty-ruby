@@ -7,6 +7,8 @@ require 'jahuty/action/show'
 
 require 'jahuty/api/client'
 
+require 'jahuty/cache/manager'
+
 require 'jahuty/exception/error'
 
 require 'jahuty/request/base'
