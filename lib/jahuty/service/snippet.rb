@@ -4,16 +4,12 @@ module Jahuty
   module Service
     # A service for interacting with snippets.
     class Snippet < Base
-      def render(id, options = {})
-        params = { params: options[:params].to_json } unless options[:params].nil?
+      def render(id, params: {}, expires_in: nil)
+        params = { params: params.to_json } unless params.empty?
 
-        action = ::Jahuty::Action::Show.new(
-          id: id,
-          resource: 'render',
-          params: params || {}
-        )
+        action = ::Jahuty::Action::Show.new(id: id, resource: 'render', params: params)
 
-        @client.request(action)
+        @client.fetch action, expires_in: expires_in
       end
     end
   end
