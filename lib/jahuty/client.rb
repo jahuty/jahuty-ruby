@@ -1,20 +1,34 @@
 # frozen_string_literal: true
 
+require 'mini_cache'
+
 module Jahuty
   # Executes requests against Jahuty's API and returns resources.
   class Client
-    def initialize(api_key:)
-      @api_key  = api_key
-      @services = Service::Factory.new(client: self)
+    def initialize(api_key:, cache: nil, expires_in: nil)
+      @api_key    = api_key
+      @cache      = cache || ::MiniCache::Store.new
+      @expires_in = expires_in
+      @services   = Service::Factory.new(client: self)
     end
 
-    # Allows services to appear as properties (e.g., jahuty.snippets).
+    # Allows services to be accessed as properties (e.g., jahuty.snippets).
     def method_missing(name, *args, &block)
       if args.empty? && @services.respond_to?(name)
         @services.send(name)
       else
         super
       end
+    end
+
+    def fetch(action, expires_in: nil)
+      @manager ||= Cache::Manager.new(
+        client: self,
+        cache: @cache,
+        expires_in: expires_in || @expires_in
+      )
+
+      @manager.fetch(action)
     end
 
     def request(action)
