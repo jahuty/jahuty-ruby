@@ -16,7 +16,27 @@ module Jahuty
         let(:render) { Jahuty::Resource::Render.new(content: 'foo') }
         let(:action) { Jahuty::Action::Show.new(resource: 'render', id: 1) }
 
-        context 'with a cache hit' do
+        context 'when the action is not supported' do
+          let(:invalid_action) { instance_double(Jahuty::Action::Base) }
+          let(:cache)          { instance_double(CacheImplementation) }
+          let(:client)         { instance_double(Jahuty::Client) }
+
+          it 'raises error' do
+            expect { manager.fetch invalid_action }.to raise_error(ArgumentError)
+          end
+        end
+
+        context 'when the cache is not supported' do
+          # Any object which doesn't respond to get/set or read/write will do.
+          let(:cache)  { Object.new }
+          let(:client) { instance_double(Jahuty::Client) }
+
+          it 'raises error' do
+            expect { manager.fetch action }.to raise_error(ArgumentError)
+          end
+        end
+
+        context 'when the action is cached' do
           let(:cache) do
             cache = instance_double(CacheImplementation)
             allow(cache).to receive(:read).and_return(render)
@@ -49,7 +69,7 @@ module Jahuty
           end
         end
 
-        context 'with a cache miss' do
+        context 'when the action is not cached' do
           let(:cache) do
             cache = instance_double(CacheImplementation)
             allow(cache).to receive(:read).and_return(nil)
