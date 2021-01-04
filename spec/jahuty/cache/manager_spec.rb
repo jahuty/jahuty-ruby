@@ -2,7 +2,7 @@
 
 module Jahuty
   module Cache
-    # A cache implementation class for testing.
+    # A cache implementation for doubles.
     class CacheImplementation
       def read(key); end
 
