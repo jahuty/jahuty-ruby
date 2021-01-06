@@ -7,6 +7,8 @@ module Jahuty
       def read(key); end
 
       def write(key, value, options = nil); end
+
+      def delete(key); end
     end
 
     RSpec.describe Manager do
@@ -32,7 +34,7 @@ module Jahuty
           let(:client) { instance_double(Jahuty::Client) }
 
           it 'raises error' do
-            expect { manager.fetch action }.to raise_error(ArgumentError)
+            expect { manager.fetch action }.to raise_error(NoMethodError)
           end
         end
 
@@ -102,7 +104,7 @@ module Jahuty
           end
         end
 
-        context 'when an :expires_in argument is passed' do
+        context 'when an non-zero :expires_in argument is passed' do
           let(:expires_in) { 30 }
 
           let(:cache) do
@@ -126,6 +128,34 @@ module Jahuty
             expect(cache).to have_received(:write).with(
               anything, anything, hash_including(expires_in: expires_in)
             )
+          end
+        end
+
+        context 'when a zero :expires_in argument is passed' do
+          let(:cache) do
+            cache = instance_double(CacheImplementation)
+            allow(cache).to receive(:read).and_return(nil)
+            allow(cache).to receive(:write)
+            allow(cache).to receive(:delete)
+
+            cache
+          end
+
+          let(:client) do
+            client = instance_double(Jahuty::Client)
+            allow(client).to receive(:request).and_return(render)
+
+            client
+          end
+
+          before { manager.fetch action, expires_in: 0 }
+
+          it 'deletes value from cache' do
+            expect(cache).to have_received(:delete)
+          end
+
+          it 'does not cache value' do
+            expect(cache).not_to have_received(:write)
           end
         end
       end
