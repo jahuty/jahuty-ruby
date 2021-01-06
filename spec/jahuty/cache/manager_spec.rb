@@ -101,6 +101,33 @@ module Jahuty
             expect(manager.fetch(action)).to be_instance_of(Jahuty::Resource::Render)
           end
         end
+
+        context 'when an :expires_in argument is passed' do
+          let(:expires_in) { 30 }
+
+          let(:cache) do
+            cache = instance_double(CacheImplementation)
+            allow(cache).to receive(:read).and_return(nil)
+            allow(cache).to receive(:write)
+
+            cache
+          end
+
+          let(:client) do
+            client = instance_double(Jahuty::Client)
+            allow(client).to receive(:request).and_return(render)
+
+            client
+          end
+
+          before { manager.fetch action, expires_in: expires_in }
+
+          it 'takes precedence' do
+            expect(cache).to have_received(:write).with(
+              anything, anything, hash_including(expires_in: expires_in)
+            )
+          end
+        end
       end
     end
   end
