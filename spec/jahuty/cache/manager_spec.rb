@@ -2,8 +2,8 @@
 
 module Jahuty
   module Cache
-    # A cache implementation for doubles.
-    class CacheImplementation
+    # A concrete cache implementation for doubles.
+    class Cache
       def read(key); end
 
       def write(key, value, options = nil); end
@@ -20,7 +20,7 @@ module Jahuty
 
         context 'when the action is not supported' do
           let(:invalid_action) { instance_double(Jahuty::Action::Base) }
-          let(:cache)          { instance_double(CacheImplementation) }
+          let(:cache)          { instance_double(Cache) }
           let(:client)         { instance_double(Jahuty::Client) }
 
           it 'raises error' do
@@ -28,19 +28,9 @@ module Jahuty
           end
         end
 
-        context 'when the cache is not supported' do
-          # Any object which doesn't respond to get/set or read/write will do.
-          let(:cache)  { Object.new }
-          let(:client) { instance_double(Jahuty::Client) }
-
-          it 'raises error' do
-            expect { manager.fetch action }.to raise_error(NoMethodError)
-          end
-        end
-
         context 'when the action is cached' do
           let(:cache) do
-            cache = instance_double(CacheImplementation)
+            cache = instance_double(Cache)
             allow(cache).to receive(:read).and_return(render)
             allow(cache).to receive(:write)
 
@@ -73,7 +63,7 @@ module Jahuty
 
         context 'when the action is not cached' do
           let(:cache) do
-            cache = instance_double(CacheImplementation)
+            cache = instance_double(Cache)
             allow(cache).to receive(:read).and_return(nil)
             allow(cache).to receive(:write)
 
@@ -104,11 +94,11 @@ module Jahuty
           end
         end
 
-        context 'when an non-zero :expires_in argument is passed' do
+        context 'when a non-zero :expires_in argument is passed' do
           let(:expires_in) { 30 }
 
           let(:cache) do
-            cache = instance_double(CacheImplementation)
+            cache = instance_double(Cache)
             allow(cache).to receive(:read).and_return(nil)
             allow(cache).to receive(:write)
 
@@ -133,8 +123,8 @@ module Jahuty
 
         context 'when a zero :expires_in argument is passed' do
           let(:cache) do
-            cache = instance_double(CacheImplementation)
-            allow(cache).to receive(:read).and_return(nil)
+            cache = instance_double(Cache)
+            allow(cache).to receive(:read).and_return(render)
             allow(cache).to receive(:write)
             allow(cache).to receive(:delete)
 
