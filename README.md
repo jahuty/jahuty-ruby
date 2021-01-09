@@ -18,11 +18,9 @@ gem 'jahuty', '~> 3.1'
 
 ## Usage
 
-Instantiate the client with your [API key](https://docs.jahuty.com/api#authentication) and use `snippets.render()` to render your snippet:
+Instantiate the client with your [API key](https://docs.jahuty.com/api#authentication) and use `snippets.render` to render your snippet:
 
 ```ruby
-require 'jahuty'
-
 jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
 
 puts jahuty.snippets.render YOUR_SNIPPET_ID
@@ -74,10 +72,10 @@ The parameters above would be equivalent to [assigning the variable](https://doc
 
 ## Caching
 
-You can use caching to control how frequently this library requests content from Jahuty's API.
+You can use caching to control how frequently this library requests the latest content from Jahuty's API.
 
-* When content is frequently changing and low traffic (i.e., _development_, _testing_, or _staging_), you can use the default in-memory store to view content changes instantaneously.
-* When content is more stable and high traffic (i.e., _production_), you can configure persistent caching to reduce network requests and improve your application's response time.
+* When content is in _development_ (i.e., frequently changing and low traffic), you can use the default in-memory store to view content changes instantaneously with slower response times.
+* When content is in _production_ (i.e., more stable and high traffic), you can use persistent caching to update content less frequently and improve your application's response time.
 
 ### Caching in memory (default)
 
@@ -87,7 +85,7 @@ By default, this library uses an in-memory cache to avoid requesting the same re
 jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
 
 # This call will send a synchronous API request; cache the result in memory;
-# and, returns the result to the caller.
+# and, return the result to the caller.
 render1 = jahuty.snippets.render YOUR_SNIPPET_ID
 
 # This call skips sending an API request and uses the cached value instead.
@@ -109,11 +107,11 @@ jahuty = new Jahuty::Client.new(
 )
 ```
 
-The persistent cache implementation you choose and configure is up to you. There are many libraries available, and most frameworks provide their own. At this time, we support any object which responds to `get(key)`/`set(key, value, expires_in:)` or `read(key)`/`write(key, value, expires_in:)` including [ActiveSupport::Cache::Store](https://api.rubyonrails.org/classes/ActiveSupport/Cache/Store.html#method-i-fetch). We aim to support as many cache implementations as we can, though, so if your implementation is missing, feel free to suggest support to `Jahuty::Cache::Manager` or let us know.
+The persistent cache implementation you choose and configure is up to you. There are many libraries available, and most frameworks provide their own. At this time, we support any object which responds to `get(key)`/`set(key, value, expires_in:)` or `read(key)`/`write(key, value, expires_in:)` including [ActiveSupport::Cache::Store](https://api.rubyonrails.org/classes/ActiveSupport/Cache/Store.html#method-i-fetch).
 
 ### Expiring
 
-There are three methods for configuring a render's `:expires_in`, the amount of time between when a render is stored and when it's considered stale. From lowest-to-highest precedence, they are:
+There are three methods for configuring this library's `:expires_in`, the amount of time between when a render is stored and when it's considered stale. From lowest-to-highest precedence, the methods are:
 
 1. configuring your caching implementation,
 1. configuring this library's default `:expires_in`, and
@@ -123,7 +121,7 @@ There are three methods for configuring a render's `:expires_in`, the amount of 
 
 You can usually configure your caching implementation with a default `:expires_in`. If no other `:expires_in` is configured, this library will defer to the caching implementation's default `:expires_in`.
 
-#### Configuring this library's default TTL
+#### Configuring this library's default `:expires_in`
 
 You can configure a default `:expires_in` for all of this library's renders by passing an integer number of seconds via the client's `:expires_in` configuration option:
 
@@ -137,12 +135,12 @@ jahuty = Jahuty::Client.new(
 
 If this library's default `:expires_in` is set, it will take precedence over the default `:expires_is` of the caching implementation.
 
-#### Configuring a render's TTL
+#### Configuring a render's `:expires_in`
 
-You can configure one render's `:expires_in` by passing an integer number of seconds via its `:expires_in` configuration option:
+You can configure a single render's `:expires_in` by passing an integer number of seconds via its `:expires_in` configuration option:
 
 ```ruby
-# Default to the caching implementation's :expires_in for all renders
+# Default to the caching implementation's :expires_in for all renders.
 jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY', cache: cache)
 
 # Except, cache this render for 60 seconds.
@@ -157,11 +155,11 @@ You can disable caching, even the default in-memory caching, by passing an `:exp
 
 ```ruby
 # Disable all caching.
-jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY', expires_in: 0)
+jahuty1 = Jahuty::Client.new(api_key: 'YOUR_API_KEY', expires_in: 0)
 
 # Disable caching for this render.
-jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
-jahuty.snippets.render(1, expires_in: 0)
+jahuty2 = Jahuty::Client.new(api_key: 'YOUR_API_KEY', expires_in: 60)
+jahuty2.snippets.render(1, expires_in: 0)
 ```
 
 ## Errors
@@ -169,8 +167,6 @@ jahuty.snippets.render(1, expires_in: 0)
 If an error occurs with [Jahuty's API](https://docs.jahuty.com/api#errors), a `Jahuty::Exception::Error` will be raised:
 
 ```ruby
-require 'jahuty'
-
 begin
   jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
   jahuty.snippets.render YOUR_SNIPPET_ID
