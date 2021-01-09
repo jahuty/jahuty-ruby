@@ -76,5 +76,18 @@ module Jahuty
         end
       end
     end
+
+    describe '#fetch' do
+      context 'when the action succeeds' do
+        before do
+          stub_request(:get, url)
+            .to_return(status: 200, body: '{"content":"foo"}', headers: {})
+        end
+
+        it 'returns render' do
+          expect(client.fetch(action)).to be_instance_of(Resource::Render)
+        end
+      end
+    end
   end
 end

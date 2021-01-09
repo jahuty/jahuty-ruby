@@ -11,7 +11,7 @@ module Jahuty
         let(:client) do
           client = instance_double('::Jahuty::Client')
 
-          allow(client).to receive(:request)
+          allow(client).to receive(:fetch)
 
           client
         end
@@ -22,8 +22,8 @@ module Jahuty
           it 'does not include params' do
             snippet.render(1)
 
-            expect(client).to have_received(:request)
-              .with(having_attributes(expected_attr))
+            expect(client).to have_received(:fetch)
+              .with(having_attributes(expected_attr), { expires_in: nil })
           end
         end
 
@@ -33,10 +33,10 @@ module Jahuty
           end
 
           it 'does include params' do
-            snippet.render(1, { params: { foo: 'bar' } })
+            snippet.render(1, params: { foo: 'bar' })
 
-            expect(client).to have_received(:request)
-              .with(having_attributes(expected_attr))
+            expect(client).to have_received(:fetch)
+              .with(having_attributes(expected_attr), { expires_in: nil })
           end
         end
       end

@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.1.0 - 2020-01-04
+
+- Add caching support for any cache implementation that supports `get/set` or `read/write` methods.
+- Default to using in-memory [mini-cache](https://github.com/derrickreimer/mini_cache) storage.
+
 ## 3.0.0 - 2020-12-30
 
 - Change from a static-based architecture (e.g., `Jahuty::Snippet.render(1)`) to an instance-based one (e.g., `jahuty.snippets.render(1)`) to make the library easier to develop, test, and use.
