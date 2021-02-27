@@ -14,9 +14,9 @@ module Jahuty
       end
 
       def self.from(data)
-        raise ArgumentError.new "Key :status missing" if !data.key?(:status)
-        raise ArgumentError.new "Key :type missing" if !data.key?(:type)
-        raise ArgumentError.new "Key :detail missing" if !data.key?(:detail)
+        raise ArgumentError.new, 'Key :status missing' unless data.key?(:status)
+        raise ArgumentError.new, 'Key :type missing' unless data.key?(:type)
+        raise ArgumentError.new, 'Key :detail missing' unless data.key?(:detail)
 
         Problem.new(data.slice(:status, :type, :detail))
       end

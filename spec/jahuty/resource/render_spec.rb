@@ -35,13 +35,13 @@ module Jahuty
         it 'raises error if :content key does not exist' do
           data.delete(:content)
 
-          expect{ Render.from(data) }.to raise_error(ArgumentError)
+          expect { described_class.from(data) }.to raise_error(ArgumentError)
         end
 
         it 'does not raise error if unused key exists' do
           data[:foo] = 'bar'
 
-          expect{ Render.from(data) }.not_to raise_error
+          expect { described_class.from(data) }.not_to raise_error
         end
       end
     end
