@@ -1,15 +1,5 @@
 # frozen_string_literal: true
 
-# context 'when the cache is not supported' do
-#   # Any object which doesn't respond to get/set or read/write will do.
-#   let(:cache)  { Object.new }
-#   let(:client) { instance_double(Jahuty::Client) }
-#
-#   it 'raises error' do
-#     expect { manager.fetch action }.to raise_error(NoMethodError)
-#   end
-# end
-
 module Jahuty
   module Cache
     # A concrete cache implementation for doubles.
