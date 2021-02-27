@@ -21,11 +21,27 @@ module Jahuty
 
       describe 'serialization' do
         it 'does not raise error' do
-          expect { Marshal.load(Marshal.dump(render)) }.not_to raise_error(::TypeError)
+          expect { Marshal.load(Marshal.dump(render)) }.not_to raise_error
         end
 
         it 'has correct attributes' do
           expect(Marshal.load(Marshal.dump(render))).to have_attributes(content: 'foo')
+        end
+      end
+
+      describe '::from' do
+        let(:data) { { content: 'foo' } }
+
+        it 'raises error if :content key does not exist' do
+          data.delete(:content)
+
+          expect { described_class.from(data) }.to raise_error(ArgumentError)
+        end
+
+        it 'does not raise error if unused key exists' do
+          data[:foo] = 'bar'
+
+          expect { described_class.from(data) }.not_to raise_error
         end
       end
     end

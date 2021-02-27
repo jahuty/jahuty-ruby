@@ -25,7 +25,7 @@ module Jahuty
 
         payload = parse(response)
 
-        Object.const_get(resource_class).send(:new, **payload)
+        Object.const_get(resource_class).send(:from, **payload)
       end
 
       private

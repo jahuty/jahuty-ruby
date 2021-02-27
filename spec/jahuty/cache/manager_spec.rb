@@ -2,15 +2,6 @@
 
 module Jahuty
   module Cache
-    # A concrete cache implementation for doubles.
-    class Cache
-      def read(key); end
-
-      def write(key, value, options = nil); end
-
-      def delete(key); end
-    end
-
     RSpec.describe Manager do
       describe '#fetch' do
         subject(:manager) { described_class.new(cache: cache, client: client) }
@@ -20,7 +11,7 @@ module Jahuty
 
         context 'when the action is not supported' do
           let(:invalid_action) { instance_double(Jahuty::Action::Base) }
-          let(:cache)          { instance_double(Cache) }
+          let(:cache)          { instance_double(Facade) }
           let(:client)         { instance_double(Jahuty::Client) }
 
           it 'raises error' do
@@ -30,7 +21,7 @@ module Jahuty
 
         context 'when the action is cached' do
           let(:cache) do
-            cache = instance_double(Cache)
+            cache = instance_double(Facade)
             allow(cache).to receive(:read).and_return(render)
             allow(cache).to receive(:write)
 
@@ -63,7 +54,7 @@ module Jahuty
 
         context 'when the action is not cached' do
           let(:cache) do
-            cache = instance_double(Cache)
+            cache = instance_double(Facade)
             allow(cache).to receive(:read).and_return(nil)
             allow(cache).to receive(:write)
 
@@ -98,7 +89,7 @@ module Jahuty
           let(:expires_in) { 30 }
 
           let(:cache) do
-            cache = instance_double(Cache)
+            cache = instance_double(Facade)
             allow(cache).to receive(:read).and_return(nil)
             allow(cache).to receive(:write)
 
@@ -123,7 +114,7 @@ module Jahuty
 
         context 'when a zero :expires_in argument is passed' do
           let(:cache) do
-            cache = instance_double(Cache)
+            cache = instance_double(Facade)
             allow(cache).to receive(:read).and_return(render)
             allow(cache).to receive(:write)
             allow(cache).to receive(:delete)

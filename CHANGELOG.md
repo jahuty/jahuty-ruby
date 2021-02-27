@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.1.1 - 2020-02-26
+
+- Add support for extra, unused attributes returned by the API to support evolution.
+- Fix the `method redefined` warnings in `cache/manager_spec.rb` and `cache/facade_spec.rb`.
+- Fix the `expect { }.not_to raise_error(SpecificErrorClass)` false positives warnings in `resource/render_spec.rb`.
+
 ## 3.1.0 - 2020-01-04
 
 - Add caching support for any cache implementation that supports `get/set` or `read/write` methods.
