@@ -12,6 +12,14 @@ module Jahuty
         @type   = type
         @detail = detail
       end
+
+      def self.from(data)
+        raise ArgumentError.new "Key :status missing" if !data.key?(:status)
+        raise ArgumentError.new "Key :type missing" if !data.key?(:type)
+        raise ArgumentError.new "Key :detail missing" if !data.key?(:detail)
+
+        Problem.new(data.slice(:status, :type, :detail))
+      end
     end
   end
 end

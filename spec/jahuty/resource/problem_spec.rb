@@ -24,6 +24,34 @@ module Jahuty
           expect(problem.detail).to eq(detail)
         end
       end
+
+      describe '::from' do
+        let(:data) { { status: 1, type: 'foo', detail: 'bar' } }
+
+        it 'raises error if :status key does not exist' do
+          data.delete(:status)
+
+          expect{ Problem.from(data) }.to raise_error(ArgumentError)
+        end
+
+        it 'raises error if :type key does not exist' do
+          data.delete(:type)
+
+          expect{ Problem.from(data) }.to raise_error(ArgumentError)
+        end
+
+        it 'raises error if :detail key does not exist' do
+          data.delete(:detail)
+
+          expect{ Problem.from(data) }.to raise_error(ArgumentError)
+        end
+
+        it 'does not raise error if unused key exists' do
+          data[:foo] = 'bar'
+
+          expect{ Problem.from(data) }.not_to raise_error
+        end
+      end
     end
   end
 end

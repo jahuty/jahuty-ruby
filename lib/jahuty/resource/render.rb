@@ -10,6 +10,12 @@ module Jahuty
         @content = content
       end
 
+      def self.from(data)
+        raise ArgumentError.new "Key :content missing" if !data.key?(:content)
+
+        Render.new(data.slice(:content))
+      end
+
       def to_s
         @content
       end
