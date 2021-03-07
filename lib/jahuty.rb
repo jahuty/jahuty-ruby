@@ -3,6 +3,7 @@
 require 'jahuty/version'
 
 require 'jahuty/action/base'
+require 'jahuty/action/index'
 require 'jahuty/action/show'
 
 require 'jahuty/api/client'
