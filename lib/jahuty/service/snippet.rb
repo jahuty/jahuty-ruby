@@ -29,7 +29,7 @@ module Jahuty
 
           renders.each do |render|
             local_params = params[render.snippet_id.to_s] || {}
-            render_params = global_params.deep_merge(local_params)
+            render_params = deep_merge(global_params, local_params)
 
             key = cache_key(snippet_id: render.snippet_id, params: render_params)
 
@@ -79,6 +79,26 @@ module Jahuty
 
       def cacheable?(expires_in)
         expires_in.nil? || expires_in.positive?
+      end
+
+      # Deeply merges two hashes like Rails.
+      #
+      # Ideally, the API and this library could use the same method to merge
+      # parameters, but this should be close enough? It just needs to be
+      # deterministic and not squash distinct combinations.
+      #
+      # @see  https://github.com/casunlight/rails/blob/master/activesupport/lib/active_support/core_ext/hash/deep_merge.rb  the source code for deep_merge
+      def deep_merge(one, two)
+        two.each_pair do |k,v|
+          tv = one[k]
+          if tv.is_a?(Hash) && v.is_a?(Hash)
+            one[k] = deep_merge(tv, v)
+          else
+            one[k] = v
+          end
+        end
+
+        one
       end
     end
   end
