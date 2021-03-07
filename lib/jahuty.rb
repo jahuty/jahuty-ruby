@@ -19,6 +19,8 @@ require 'jahuty/resource/problem'
 require 'jahuty/resource/render'
 require 'jahuty/resource/factory'
 
+require 'jahuty/response/handler'
+
 require 'jahuty/service/base'
 require 'jahuty/service/snippet'
 

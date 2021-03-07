@@ -37,13 +37,13 @@ module Jahuty
 
       response = @client.send(request)
 
-      @resources ||= Resource::Factory.new
+      @responses ||= Response::Handler.new
 
-      resource = @resources.call(action, response)
+      result = @responses.call(action, response)
 
-      raise Exception::Error.new(resource), 'API responded with a problem' if resource.is_a?(Resource::Problem)
+      raise Exception::Error.new(result), 'API problem' if resource.is_a?(Resource::Problem)
 
-      resource
+      result
     end
 
     def respond_to_missing?(name, include_private = false)
