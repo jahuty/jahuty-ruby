@@ -41,7 +41,7 @@ module Jahuty
 
       result = @responses.call(action, response)
 
-      raise Exception::Error.new(result), 'API problem' if resource.is_a?(Resource::Problem)
+      raise Exception::Error.new(result), 'API problem' if result.is_a?(Resource::Problem)
 
       result
     end

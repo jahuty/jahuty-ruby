@@ -51,7 +51,9 @@ module Jahuty
       context 'when the action succeeds' do
         before do
           stub_request(:get, url)
-            .to_return(status: 200, body: '{"content":"foo"}', headers: {})
+            .to_return(status: 200, body: '{"content":"foo"}', headers: {
+              'Content-Type' => 'application/json'
+            })
         end
 
         it 'returns render' do
