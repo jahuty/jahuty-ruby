@@ -28,16 +28,6 @@ module Jahuty
       end
     end
 
-    def fetch(action, expires_in: nil)
-      @manager ||= Cache::Manager.new(
-        client: self,
-        cache: @cache,
-        expires_in: expires_in || @expires_in
-      )
-
-      @manager.fetch(action)
-    end
-
     def request(action)
       @requests ||= Request::Factory.new
 
