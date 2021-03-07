@@ -21,7 +21,6 @@ require 'jahuty/resource/factory'
 
 require 'jahuty/service/base'
 require 'jahuty/service/snippet'
-require 'jahuty/service/factory'
 
 require 'jahuty/client'
 
