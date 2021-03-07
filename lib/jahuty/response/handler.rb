@@ -43,7 +43,7 @@ module Jahuty
       end
 
       def problem?(response)
-        response.headers['Content-Type'] == 'application/problem+json' &&
+        response.headers['Content-Type'].include?('application/problem+json') &&
           (response.status < 200 || response.status >= 300)
       end
 
@@ -52,7 +52,7 @@ module Jahuty
       end
 
       def success?(response)
-        response.headers['Content-Type'] == 'application/json' &&
+        response.headers['Content-Type'].include?('application/json') &&
           response.status.between?(200, 299)
       end
     end
