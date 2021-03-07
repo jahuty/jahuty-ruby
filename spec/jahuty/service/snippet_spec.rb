@@ -4,7 +4,7 @@ module Jahuty
   module Service
     RSpec.describe Snippet do
       describe '#render' do
-        subject(:snippet) do
+        subject(:snippets) do
           described_class.new(client: client, cache: cache)
         end
 
@@ -26,11 +26,85 @@ module Jahuty
           cache
         end
 
+        let(:render) { Jahuty::Resource::Render.new(content: 'foo') }
+
+        context 'when the render is cached' do
+          before { allow(cache).to receive(:read).and_return(render) }
+
+          it 'returns the cached value' do
+            expect(snippets.render(1)).to eq(render)
+          end
+
+          it 'does not send API request' do
+            snippets.render 1
+
+            expect(client).not_to have_received(:request)
+          end
+
+          it 'does not cache value' do
+            snippets.render 1
+
+            expect(cache).not_to have_received(:write)
+          end
+        end
+
+        context 'when the render is not cached' do
+          before { allow(client).to receive(:request).and_return(render) }
+
+          it 'returns the cached value' do
+            expect(snippets.render(1)).to eq(render)
+          end
+
+          it 'sends API request' do
+            snippets.render 1
+
+            expect(client).to have_received(:request)
+          end
+
+          it 'caches value' do
+            snippets.render 1
+
+            expect(cache).to have_received(:write)
+          end
+        end
+
+        context 'when expires_in is positive' do
+          let(:expires_in) { 30 }
+
+          before do
+            allow(client).to receive(:request).and_return(render)
+
+            snippets.render 1, expires_in: expires_in
+          end
+
+          it 'takes precedence' do
+            expect(cache).to have_received(:write).with(
+              anything, anything, hash_including(expires_in: expires_in)
+            )
+          end
+        end
+
+        context 'when expires_in is negative' do
+          before do
+            allow(cache).to receive(:read).and_return(render)
+
+            snippets.render 1, expires_in: 0
+          end
+
+          it 'deletes render from cache' do
+            expect(cache).to have_received(:delete)
+          end
+
+          it 'does not cache value' do
+            expect(cache).not_to have_received(:write)
+          end
+        end
+
         context 'when params do not exist' do
           let(:expected_attr) { { id: 1, resource: 'render', params: {} } }
 
           it 'does not include params' do
-            snippet.render(1)
+            snippets.render(1)
 
             expect(client).to have_received(:request)
               .with(having_attributes(expected_attr))
@@ -43,7 +117,7 @@ module Jahuty
           end
 
           it 'does include params' do
-            snippet.render(1, params: { foo: 'bar' })
+            snippets.render(1, params: { foo: 'bar' })
 
             expect(client).to have_received(:request)
               .with(having_attributes(expected_attr))
