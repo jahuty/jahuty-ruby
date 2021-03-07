@@ -11,6 +11,35 @@ module Jahuty
         @expires_in = expires_in
       end
 
+      def all_renders(tag, params: {}, expires_in: nil)
+        expires_in ||= @expires_in
+
+        request_params = { tag: tag }
+        request_params[:params] = params.to_json unless params.empty?
+
+        action = ::Jahuty::Action::Index.new(
+          resource: 'render',
+          params: request_params
+        )
+
+        renders = @client.request action
+
+        if cacheable?(expires_in)
+          global_params = params['*'] || {}
+
+          renders.each do |render|
+            local_params = params[render.snippet_id.to_s] || {}
+            render_params = global_params.deep_merge(local_params)
+
+            key = cache_key(snippet_id: render.snippet_id, params: render_params)
+
+            @cache.write key, render, expires_in: expires_in
+          end
+        end
+
+        renders
+      end
+
       def render(snippet_id, params: {}, expires_in: nil)
         expires_in ||= @expires_in
 
@@ -21,13 +50,17 @@ module Jahuty
         @cache.delete key unless render.nil? || cacheable?(expires_in)
 
         if render.nil?
-          params = { params: params.to_json } unless params.empty?
+          request_params = {}
+          request_params[:params] = params.to_json unless params.empty?
+
           action = ::Jahuty::Action::Show.new(
             id: snippet_id,
             resource: 'render',
-            params: params
+            params: request_params
           )
+
           render = @client.request action
+
           @cache.write key, render, expires_in: expires_in if cacheable?(expires_in)
         end
 

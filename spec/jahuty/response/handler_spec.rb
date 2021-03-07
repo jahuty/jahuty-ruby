@@ -78,7 +78,7 @@ module Jahuty
         context 'when collection' do
           let(:status)       { 200 }
           let(:content_type) { 'application/json' }
-          let(:body)         { '[{"id":1,"content":"foo"},{"id":2,"content":"bar"}]' }
+          let(:body)         { '[{"snippet_id":1,"content":"foo"},{"snippet_id":2,"content":"bar"}]' }
 
           it 'returns array' do
             expect(handler.call index, response).to be_instance_of(Array)
@@ -88,7 +88,7 @@ module Jahuty
         context 'when resource' do
           let(:status)       { 200 }
           let(:content_type) { 'application/json' }
-          let(:body)         { '{"content":"foo"}' }
+          let(:body)         { '{"snippet_id":1,"content":"foo"}' }
 
           it 'returns render' do
             expect(handler.call show, response).to be_instance_of(Resource::Render)
