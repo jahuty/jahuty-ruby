@@ -5,15 +5,25 @@ module Jahuty
     RSpec.describe Snippet do
       describe '#render' do
         subject(:snippet) do
-          described_class.new(client: client)
+          described_class.new(client: client, cache: cache)
         end
 
         let(:client) do
           client = instance_double('::Jahuty::Client')
 
-          allow(client).to receive(:fetch)
+          allow(client).to receive(:request)
 
           client
+        end
+
+        let(:cache) do
+          cache = instance_double('::Jahuty::Cache::Facade')
+
+          allow(cache).to receive(:read)
+          allow(cache).to receive(:write)
+          allow(cache).to receive(:delete)
+
+          cache
         end
 
         context 'when params do not exist' do
@@ -22,8 +32,8 @@ module Jahuty
           it 'does not include params' do
             snippet.render(1)
 
-            expect(client).to have_received(:fetch)
-              .with(having_attributes(expected_attr), { expires_in: nil })
+            expect(client).to have_received(:request)
+              .with(having_attributes(expected_attr))
           end
         end
 
@@ -35,8 +45,8 @@ module Jahuty
           it 'does include params' do
             snippet.render(1, params: { foo: 'bar' })
 
-            expect(client).to have_received(:fetch)
-              .with(having_attributes(expected_attr), { expires_in: nil })
+            expect(client).to have_received(:request)
+              .with(having_attributes(expected_attr))
           end
         end
       end

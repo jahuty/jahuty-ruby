@@ -7,15 +7,22 @@ module Jahuty
   class Client
     def initialize(api_key:, cache: nil, expires_in: nil)
       @api_key    = api_key
-      @cache      = cache || ::MiniCache::Store.new
+      @cache      = Cache::Facade.new(cache || ::MiniCache::Store.new)
       @expires_in = expires_in
-      @services   = Service::Factory.new(client: self)
+      @services   = {}
     end
 
     # Allows services to be accessed as properties (e.g., jahuty.snippets).
     def method_missing(name, *args, &block)
-      if args.empty? && @services.respond_to?(name)
-        @services.send(name)
+      if args.empty? && name == :snippets
+        unless @services.key?(name)
+          @services[name] = Service::Snippet.new(
+            client: self,
+            cache: @cache,
+            expires_in: @expires_in
+          )
+        end
+        @services[name]
       else
         super
       end
@@ -50,7 +57,7 @@ module Jahuty
     end
 
     def respond_to_missing?(name, include_private = false)
-      @services.respond_to?(name, include_private) || super
+      name == :snippets || super
     end
   end
 end
