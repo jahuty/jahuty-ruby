@@ -5,19 +5,24 @@ module Jahuty
     # Instantiates a request from an action.
     class Factory
       def call(action)
-        if action.is_a?(::Jahuty::Action::Show)
-          path = "snippets/#{action.id}/render"
-        elsif action.is_a?(::Jahuty::Action::Index)
-          path = 'snippets/render'
-        else
-          raise ArgumentError, "Action is not supported"
-        end
-
         Base.new(
           method: 'get',
-          path: path,
+          path: path(action),
           params: action.params
         )
+      end
+
+      private
+
+      def path(action)
+        case action
+        when ::Jahuty::Action::Show
+          "snippets/#{action.id}/render"
+        when ::Jahuty::Action::Index
+          'snippets/render'
+        else
+          raise ArgumentError, 'Action is not supported'
+        end
       end
     end
   end

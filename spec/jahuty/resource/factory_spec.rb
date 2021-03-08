@@ -14,7 +14,7 @@ module Jahuty
 
         context 'with a valid resource' do
           it 'returns render' do
-            expect(factory.call 'render', { content: 'foo', snippet_id: 1 }).to be_instance_of(Render)
+            expect(factory.call('render', { content: 'foo', snippet_id: 1 })).to be_instance_of(Render)
           end
         end
       end

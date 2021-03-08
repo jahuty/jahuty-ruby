@@ -11,7 +11,7 @@ module Jahuty
       describe '#call' do
         context 'when action is not supported' do
           it 'raises error' do
-            expect { factory.call(Object.new) }.to raise_error
+            expect { factory.call(Object.new) }.to raise_error(ArgumentError)
           end
         end
 

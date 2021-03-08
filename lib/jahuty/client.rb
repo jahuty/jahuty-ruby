@@ -17,9 +17,7 @@ module Jahuty
       if args.empty? && name == :snippets
         unless @services.key?(name)
           @services[name] = Service::Snippet.new(
-            client: self,
-            cache: @cache,
-            expires_in: @expires_in
+            client: self, cache: @cache, expires_in: @expires_in
           )
         end
         @services[name]

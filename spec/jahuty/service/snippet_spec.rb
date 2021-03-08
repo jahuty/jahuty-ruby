@@ -88,7 +88,7 @@ module Jahuty
           before { allow(client).to receive(:request).and_return([render]) }
 
           it 'returns the cached value' do
-            expect(snippets.all_renders 'foo').to eq([render])
+            expect(snippets.all_renders('foo')).to eq([render])
           end
 
           it 'sends API request' do

@@ -3,8 +3,8 @@
 require 'json'
 
 module Jahuty
-  # Inspects the response and returns the appropriate resource or collection.
   module Response
+    # Inspects the response and returns the appropriate resource or collection.
     class Handler
       def call(action, response)
         resource_name = name_resource action, response

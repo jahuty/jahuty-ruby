@@ -54,7 +54,8 @@ module Jahuty
             .to_return(
               status: 200,
               body: '{"snippet_id":1,"content":"foo"}',
-              headers: { 'Content-Type' => 'application/json' })
+              headers: { 'Content-Type' => 'application/json' }
+            )
         end
 
         it 'returns render' do

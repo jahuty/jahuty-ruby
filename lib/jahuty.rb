@@ -26,6 +26,8 @@ require 'jahuty/service/snippet'
 
 require 'jahuty/client'
 
+require 'jahuty/util'
+
 module Jahuty
   BASE_URI = 'https://api.jahuty.com'
 end

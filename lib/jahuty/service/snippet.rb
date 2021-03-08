@@ -12,30 +12,9 @@ module Jahuty
       end
 
       def all_renders(tag, params: {}, expires_in: nil)
-        expires_in ||= @expires_in
+        renders = index_renders tag: tag, params: params
 
-        request_params = { tag: tag }
-        request_params[:params] = params.to_json unless params.empty?
-
-        action = ::Jahuty::Action::Index.new(
-          resource: 'render',
-          params: request_params
-        )
-
-        renders = @client.request action
-
-        if cacheable?(expires_in)
-          global_params = params['*'] || {}
-
-          renders.each do |render|
-            local_params = params[render.snippet_id.to_s] || {}
-            render_params = deep_merge(global_params, local_params)
-
-            key = cache_key(snippet_id: render.snippet_id, params: render_params)
-
-            @cache.write key, render, expires_in: expires_in
-          end
-        end
+        cache_renders renders: renders, params: params, expires_in: expires_in
 
         renders
       end
@@ -50,16 +29,7 @@ module Jahuty
         @cache.delete key unless render.nil? || cacheable?(expires_in)
 
         if render.nil?
-          request_params = {}
-          request_params[:params] = params.to_json unless params.empty?
-
-          action = ::Jahuty::Action::Show.new(
-            id: snippet_id,
-            resource: 'render',
-            params: request_params
-          )
-
-          render = @client.request action
+          render = show_render snippet_id: snippet_id, params: params
 
           @cache.write key, render, expires_in: expires_in if cacheable?(expires_in)
         end
@@ -77,28 +47,50 @@ module Jahuty
         "jahuty_#{fingerprint.hexdigest}"
       end
 
+      def cache_renders(renders:, params:, expires_in: nil)
+        expires_in ||= @expires_in
+
+        return unless cacheable?(expires_in)
+
+        global_params = params['*'] || {}
+
+        renders.each do |render|
+          local_params = params[render.snippet_id.to_s] || {}
+          render_params = ::Jahuty::Util.deep_merge global_params, local_params
+
+          key = cache_key snippet_id: render.snippet_id, params: render_params
+
+          @cache.write key, render, expires_in: expires_in
+        end
+      end
+
       def cacheable?(expires_in)
         expires_in.nil? || expires_in.positive?
       end
 
-      # Deeply merges two hashes like Rails.
-      #
-      # Ideally, the API and this library could use the same method to merge
-      # parameters, but this should be close enough? It just needs to be
-      # deterministic and not squash distinct combinations.
-      #
-      # @see  https://github.com/casunlight/rails/blob/master/activesupport/lib/active_support/core_ext/hash/deep_merge.rb  the source code for deep_merge
-      def deep_merge(one, two)
-        two.each_pair do |k,v|
-          tv = one[k]
-          if tv.is_a?(Hash) && v.is_a?(Hash)
-            one[k] = deep_merge(tv, v)
-          else
-            one[k] = v
-          end
-        end
+      def index_renders(tag:, params: {})
+        request_params = { tag: tag }
+        request_params[:params] = params.to_json unless params.empty?
 
-        one
+        action = ::Jahuty::Action::Index.new(
+          resource: 'render',
+          params: request_params
+        )
+
+        @client.request action
+      end
+
+      def show_render(snippet_id:, params: {})
+        request_params = {}
+        request_params[:params] = params.to_json unless params.empty?
+
+        action = ::Jahuty::Action::Show.new(
+          id: snippet_id,
+          resource: 'render',
+          params: request_params
+        )
+
+        @client.request action
       end
     end
   end

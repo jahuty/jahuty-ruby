@@ -56,7 +56,7 @@ module Jahuty
         end
 
         it 'returns render' do
-          expect(described_class.from(data)).to be_instance_of(Render)
+          expect(described_class.from(data)).to be_instance_of(described_class)
         end
       end
     end
