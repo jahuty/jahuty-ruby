@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.2.0 - 2020-03-08
 
-* Add collections to the library with `all_renders` method. This required adding new objects like `Action::Show` and refactoring old ones like `Resource::Factory`. We also removed some objects like `Cache::Manager` and `Service::Factory`, because the complexity they added wasn't worth the hassle at this point.
-* Add `snippet_id` to `Resource::Render` to help keep track of a render's parent snippet.
+* Added collections to the library with `all_renders` method. This was a rather large change and required adding new objects like `Action::Show`, refactoring old ones like `Resource::Factory`, and removing some objects like `Cache::Manager` and `Service::Factory` which added unnecessary complexity.
+* Added `snippet_id` to `Resource::Render` to help keep track of a render's parent snippet.
 
 ## 3.1.1 - 2020-02-26
 
