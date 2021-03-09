@@ -51,7 +51,11 @@ module Jahuty
       context 'when the action succeeds' do
         before do
           stub_request(:get, url)
-            .to_return(status: 200, body: '{"content":"foo"}', headers: {})
+            .to_return(
+              status: 200,
+              body: '{"snippet_id":1,"content":"foo"}',
+              headers: { 'Content-Type' => 'application/json' }
+            )
         end
 
         it 'returns render' do
@@ -65,27 +69,12 @@ module Jahuty
             .to_return(
               status: 404,
               body: '{ "status":404, "type": "foo", "detail": "bar" }',
-              headers: {
-                'Content-Type' => 'application/problem+json'
-              }
+              headers: { 'Content-Type' => 'application/problem+json' }
             )
         end
 
         it 'raises error' do
           expect { client.request(action) }.to raise_error(Exception::Error)
-        end
-      end
-    end
-
-    describe '#fetch' do
-      context 'when the action succeeds' do
-        before do
-          stub_request(:get, url)
-            .to_return(status: 200, body: '{"content":"foo"}', headers: {})
-        end
-
-        it 'returns render' do
-          expect(client.fetch(action)).to be_instance_of(Resource::Render)
         end
       end
     end

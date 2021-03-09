@@ -3,12 +3,12 @@
 require 'jahuty/version'
 
 require 'jahuty/action/base'
+require 'jahuty/action/index'
 require 'jahuty/action/show'
 
 require 'jahuty/api/client'
 
 require 'jahuty/cache/facade'
-require 'jahuty/cache/manager'
 
 require 'jahuty/exception/error'
 
@@ -19,11 +19,14 @@ require 'jahuty/resource/problem'
 require 'jahuty/resource/render'
 require 'jahuty/resource/factory'
 
+require 'jahuty/response/handler'
+
 require 'jahuty/service/base'
 require 'jahuty/service/snippet'
-require 'jahuty/service/factory'
 
 require 'jahuty/client'
+
+require 'jahuty/util'
 
 module Jahuty
   BASE_URI = 'https://api.jahuty.com'

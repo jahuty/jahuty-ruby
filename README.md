@@ -26,7 +26,7 @@ jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
 puts jahuty.snippets.render YOUR_SNIPPET_ID
 ```
 
-You can also access the render's content with `to_s` or `content`:
+You can access the render's content with `to_s` or `content`:
 
 ```ruby
 jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
@@ -54,9 +54,19 @@ In an HTML view:
 </body>
 ```
 
+You can also use tags to render a collection of snippets with the `snippets.all_renders` method:
+
+```ruby
+jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
+
+renders = jahuty.snippets.all_renders 'YOUR_TAG'
+
+renders.each { |render| puts render }
+```
+
 ## Parameters
 
-You can [pass parameters](https://docs.jahuty.com/liquid/parameters) into your snippet using the `params` option:
+You can [pass parameters](https://docs.jahuty.com/liquid/parameters) into your renders using the `params` option:
 
 ```ruby
 jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
@@ -68,6 +78,30 @@ The parameters above would be equivalent to [assigning the variable](https://doc
 
 ```html
 {% assign foo = "bar" %}
+```
+
+If you're rendering a collection, the first dimension of the `params` key determines the parameters' scope. Use an asterisk key (`*`) to pass the same parameters to all snippets, or use a snippet id as key to pass parameters to a specific snippet.
+
+```ruby
+jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
+
+jahuty.snippets.all_renders 'YOUR_TAG', params: {
+  '*' => { foo: 'bar' },
+  '1' => { baz: 'qux' }
+}
+```
+
+This will pass the params `{ foo: 'bar' }` to all snippets, except for snippet `1`, which will be passed `{ foo: 'bar', baz: 'qux' }`.
+
+The two parameter lists will be merged recursively, and parameters for a specific snippet will take precedence over parameters for all snippets. For example, the parameter `foo` will be assigned the value `"bar"` for all snippets, except for snippet `1`, where it will be assigned the value `"qux"`:
+
+```ruby
+jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
+
+jahuty.snippets.all_renders 'YOUR_TAG', params: {
+  '*' => { foo: 'bar' },
+  '1' => { foo: 'qux' }
+}
 ```
 
 ## Caching
@@ -133,21 +167,43 @@ jahuty = Jahuty::Client.new(
 )
 ```
 
-If this library's default `:expires_in` is set, it will take precedence over the default `:expires_is` of the caching implementation.
+If this library's default `:expires_in` is set, it will take precedence over the default `:expires_in` of the caching implementation.
 
 #### Configuring a render's `:expires_in`
 
-You can configure a single render's `:expires_in` by passing an integer number of seconds via its `:expires_in` configuration option:
+You can configure `:expires_in` for individual renders by passing an integer number of seconds via the render method's `:expires_in` configuration option:
 
 ```ruby
-# Default to the caching implementation's :expires_in for all renders.
-jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY', cache: cache)
+# Cache all renders 300 seconds (five minutes).
+jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY', cache: cache, expires_in: 300)
 
 # Except, cache this render for 60 seconds.
-render = jahuty.snippets.render(1, expires_in: 60)
+render = jahuty.snippets.render YOUR_SNIPPET_ID, expires_in: 60
+
+# Except, cache the renders in this collection for 120 seconds.
+render = jahuty.snippets.all_renders 'YOUR_TAG', expires_in: 120
 ```
 
 If a render's `:expires_in` is set, it will take precedence over the library's default `:expires_in` and the caching implementation's `:expires_in`.
+
+### Caching collections
+
+By default, this library will cache each render returned by `all_renders`:
+
+```ruby
+jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY', cache: cache)
+
+# Sends a network request, caches each render, and returns the collection.
+jahuty.snippets.all_renders 'YOUR_TAG';
+
+# If this reder exists in the collection, the cached value will be used instead
+# of sending a network request for the latest version.
+jahuty.snippets.render YOUR_SNIPPET_ID;
+```
+
+This is a powerful feature, especially when combined with a persistent cache. Using the `all_renders` method, you can render and cache an arbitrarily large chunk of content with a single network request. Because any subsequent call to `render` a snippet in the collection will use its cached version, you can reduce the number of network requests to load your content.
+
+This method is even more powerful when combined with an asynchronous background job. When `all_renders` can be called outside your request cycle periodically, you can turn your cache into your content storage mechanism. You can render and cache dynamic content as frequently as you like without any hit to your application's response time.
 
 ### Disabling caching
 
@@ -159,7 +215,7 @@ jahuty1 = Jahuty::Client.new(api_key: 'YOUR_API_KEY', expires_in: 0)
 
 # Disable caching for this render.
 jahuty2 = Jahuty::Client.new(api_key: 'YOUR_API_KEY', expires_in: 60)
-jahuty2.snippets.render(1, expires_in: 0)
+jahuty2.snippets.render 1, expires_in: 0
 ```
 
 ## Errors

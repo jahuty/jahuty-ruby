@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.2.0 - 2020-03-08
+
+* Added collections to the library with `all_renders` method. This was a rather large change and required adding new objects like `Action::Show`, refactoring old ones like `Resource::Factory`, and removing some objects like `Cache::Manager` and `Service::Factory` which added unnecessary complexity.
+* Added `snippet_id` to `Resource::Render` to help keep track of a render's parent snippet.
+
 ## 3.1.1 - 2020-02-26
 
 - Add support for extra, unused attributes returned by the API to support evolution.
