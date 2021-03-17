@@ -1,5 +1,37 @@
 # frozen_string_literal: true
 
+RSpec::Matchers.define :be_cache_hit do
+  match do |actual|
+    one = Time.now
+    actual.call
+    two = Time.now
+
+    (two - one) * 1000 < 1
+  end
+
+  description { 'be a cache hit' }
+
+  def supports_block_expectations?
+    true
+  end
+end
+
+RSpec::Matchers.define :be_cache_miss do
+  match do |actual|
+    one = Time.now
+    actual.call
+    two = Time.now
+
+    (two - one) * 1000 > 10
+  end
+
+  description { 'be a cache miss' }
+
+  def supports_block_expectations?
+    true
+  end
+end
+
 module Jahuty
   RSpec.describe Client do
     let(:jahuty) do
@@ -20,9 +52,7 @@ module Jahuty
           content: '<p>This is my first snippet!</p>'
         )
 
-        # Rendering the snippet again should use the cached value.
-        time = timer { jahuty.snippets.render 1 }
-        expect(time).to be < 1
+        expect { jahuty.snippets.render 1 }.to be_cache_hit
       end
     end
 
@@ -36,16 +66,10 @@ module Jahuty
           content: '<p>This foo is bar.</p>'
         )
 
-        # Rendering the snippet again with the _same_ params should use the
-        # cached value.
-        time = timer { jahuty.snippets.render 62, params: params }
-        expect(time).to be < 1
+        expect { jahuty.snippets.render 62, params: params }.to be_cache_hit
 
-        # Rendering the snippet again with _different_ params should send a
-        # network request.
         params[:bar] = 'baz'
-        time = timer { jahuty.snippets.render 62, params: params }
-        expect(time).to be > 10
+        expect { jahuty.snippets.render 62, params: params }.to be_cache_miss
       end
     end
 
@@ -62,29 +86,24 @@ module Jahuty
           an_object_having_attributes(content: '<p>This foo is bar.</p>')
         )
 
-        # Rendering a snippet in the collection with the _same_ params should
-        # use the cached value.
-        time = timer { jahuty.snippets.render 1, params: { foo: 'foo' } }
-        expect(time).to be < 1
+        expect {
+          jahuty.snippets.render 1, params: { foo: 'foo' }
+        }.to be_cache_hit
 
-        time = timer { jahuty.snippets.render 62, params: { foo: 'foo', bar: 'bar' } }
-        expect(time).to be < 1
+        expect {
+          jahuty.snippets.render 62, params: { foo: 'foo', bar: 'bar' }
+        }.to be_cache_hit
 
-        # Rendering a snippet in the collection with _different_ params should
-        # send a network request.
-        time = timer { jahuty.snippets.render 62, params: { foo: 'qux', bar: 'quux' } }
-        expect(time).to be > 10
+        expect {
+          jahuty.snippets.render 62, params: { foo: 'qux', bar: 'quux' }
+        }.to be_cache_miss
       end
     end
 
-    private
-
-    def timer(&block)
-      one = Time.now
-      yield block
-      two = Time.now
-
-      (two - one) * 1000
+    describe 'user has problem' do
+      it 'raises error' do
+        expect { jahuty.snippets.render(999) }.to raise_error(Exception::Error)
+      end
     end
   end
 end
