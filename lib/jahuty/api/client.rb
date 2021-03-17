@@ -20,10 +20,11 @@ module Jahuty
       def send(request)
         @client ||= Faraday.new(url: ::Jahuty::BASE_URI, headers: headers)
 
+        # Cnvert the action's string method to Faraday's verb-based methods.
         @client.send(
           request.method.to_sym,
           request.path,
-          { params: request.params }
+          request.params
         )
       end
 
