@@ -86,17 +86,14 @@ module Jahuty
           an_object_having_attributes(content: '<p>This foo is bar.</p>')
         )
 
-        expect {
-          jahuty.snippets.render 1, params: { foo: 'foo' }
-        }.to be_cache_hit
+        params = { foo: 'foo' }
+        expect { jahuty.snippets.render 1, params: params }.to be_cache_hit
 
-        expect {
-          jahuty.snippets.render 62, params: { foo: 'foo', bar: 'bar' }
-        }.to be_cache_hit
+        params = { foo: 'foo', bar: 'bar' }
+        expect { jahuty.snippets.render 62, params: params }.to be_cache_hit
 
-        expect {
-          jahuty.snippets.render 62, params: { foo: 'qux', bar: 'quux' }
-        }.to be_cache_miss
+        params = { foo: 'qux', bar: 'quux' }
+        expect { jahuty.snippets.render 62, params: params }.to be_cache_miss
       end
     end
 
