@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.2.1 - 2020-03-16
+
+* Fix issue with double-enveloping the `params` query string parameter.
+* Add system tests for params, caching, problems, and collections.
+
 ## 3.2.0 - 2020-03-08
 
 * Added collections to the library with `all_renders` method. This was a rather large change and required adding new objects like `Action::Show`, refactoring old ones like `Resource::Factory`, and removing some objects like `Cache::Manager` and `Service::Factory` which added unnecessary complexity.

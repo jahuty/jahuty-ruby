@@ -13,7 +13,7 @@ It is multi-platform, and we strive to make it run equally well on Windows, Linu
 To install, add this line to your application's `Gemfile` and run `bundle install`:
 
 ```ruby
-gem 'jahuty', '~> 3.1'
+gem 'jahuty', '~> 3.2'
 ```
 
 ## Usage
