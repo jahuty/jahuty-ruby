@@ -11,15 +11,15 @@ module Jahuty
         @expires_in = expires_in
       end
 
-      def all_renders(tag, params: {}, expires_in: nil)
-        renders = index_renders tag: tag, params: params
+      def all_renders(tag, params: {}, expires_in: nil, prefer_latest: false)
+        renders = index_renders tag: tag, params: params, prefer_latest: prefer_latest
 
         cache_renders renders: renders, params: params, expires_in: expires_in
 
         renders
       end
 
-      def render(snippet_id, params: {}, expires_in: nil)
+      def render(snippet_id, params: {}, expires_in: nil, prefer_latest: false)
         expires_in ||= @expires_in
 
         key = cache_key snippet_id: snippet_id, params: params
@@ -29,7 +29,7 @@ module Jahuty
         @cache.delete key unless render.nil? || cacheable?(expires_in)
 
         if render.nil?
-          render = show_render snippet_id: snippet_id, params: params
+          render = show_render snippet_id: snippet_id, params: params, prefer_latest: prefer_latest
 
           @cache.write key, render, expires_in: expires_in if cacheable?(expires_in)
         end
@@ -50,6 +50,8 @@ module Jahuty
       def cache_renders(renders:, params:, expires_in: nil)
         expires_in ||= @expires_in
 
+        return if renders.nil?
+
         return unless cacheable?(expires_in)
 
         global_params = params['*'] || {}
@@ -68,9 +70,10 @@ module Jahuty
         expires_in.nil? || expires_in.positive?
       end
 
-      def index_renders(tag:, params: {})
+      def index_renders(tag:, params: {}, prefer_latest: false)
         request_params = { tag: tag }
         request_params[:params] = params.to_json unless params.empty?
+        request_params[:latest] = 1 if prefer_latest
 
         action = ::Jahuty::Action::Index.new(
           resource: 'render',
@@ -80,9 +83,10 @@ module Jahuty
         @client.request action
       end
 
-      def show_render(snippet_id:, params: {})
+      def show_render(snippet_id:, params: {}, prefer_latest: false)
         request_params = {}
         request_params[:params] = params.to_json unless params.empty?
+        request_params[:latest] = 1 if prefer_latest
 
         action = ::Jahuty::Action::Show.new(
           id: snippet_id,
