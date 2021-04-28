@@ -25,7 +25,7 @@ module Jahuty
       private
 
       def collection?(action, payload)
-        action.is_a?(Action::Index) && payload.is_a?(::Array)
+        payload.is_a?(::Array)
       end
 
       def name_resource(action, response)
@@ -48,7 +48,7 @@ module Jahuty
       end
 
       def resource?(action, payload)
-        !action.is_a?(Action::Index) && payload.is_a?(::Object)
+        payload.is_a?(::Object)
       end
 
       def success?(response)
