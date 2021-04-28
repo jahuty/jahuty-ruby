@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'securerandom'
+
 RSpec::Matchers.define :be_cache_hit do
   match do |actual|
     one = Time.now
@@ -44,62 +46,123 @@ module Jahuty
 
     after { WebMock.disable_net_connect! }
 
-    describe 'user renders snippet without parameters' do
-      it 'renders the snippet' do
-        render = jahuty.snippets.render 1
+    describe 'user renders one snippet' do
+      context 'without parameters' do
+        let(:render) { jahuty.snippets.render 1 }
 
-        expect(render).to have_attributes(
-          content: '<p>This is my first snippet!</p>'
-        )
+        it 'renders the snippet' do
+          expect(render).to have_attributes(
+            content: '<p>This is my first snippet!</p>'
+          )
+        end
 
-        expect { jahuty.snippets.render 1 }.to be_cache_hit
+        it 'caches the render' do
+          render
+
+          expect { jahuty.snippets.render 1 }.to be_cache_hit
+        end
+      end
+
+      context 'with parameters' do
+        let(:params) { { foo: 'foo', bar: 'bar' } }
+        let(:render) { jahuty.snippets.render 62, params: params }
+
+        it 'renders the snippet' do
+          expect(render).to have_attributes(
+            content: '<p>This foo is bar.</p>'
+          )
+        end
+
+        it 'caches the render' do
+          render
+
+          expect { jahuty.snippets.render 62, params: params }.to be_cache_hit
+
+          params[:bar] = 'baz'
+          expect { jahuty.snippets.render 62, params: params }.to be_cache_miss
+        end
+      end
+
+      context 'with latest content' do
+        let(:render) { jahuty.snippets.render 102, prefer_latest: 1 }
+
+        it 'renders the snippet' do
+          expect(render).to have_attributes(
+            content: '<p>This content is latest.</p>'
+          )
+        end
+      end
+
+      context 'with a problem' do
+        it 'raises error' do
+          expect { jahuty.snippets.render(999) }.to raise_error(Exception::Error)
+        end
       end
     end
 
-    describe 'user renders snippet with parameters' do
-      it 'renders the snippet' do
-        params = { foo: 'foo', bar: 'bar' }
+    describe '#all_renders' do
+      context 'without parameters' do
+        let(:renders) { jahuty.snippets.all_renders 'test' }
 
-        render = jahuty.snippets.render 62, params: params
+        it 'renders the collection' do
+          expect(renders).to include(
+            an_object_having_attributes(content: '<p>This is my first snippet!</p>'),
+            an_object_having_attributes(content: '<p>This  is .</p>'),
+            an_object_having_attributes(content: '<p>This content is published.</p>')
+          )
+        end
 
-        expect(render).to have_attributes(
-          content: '<p>This foo is bar.</p>'
-        )
+        it 'caches the renders' do
+          renders
 
-        expect { jahuty.snippets.render 62, params: params }.to be_cache_hit
-
-        params[:bar] = 'baz'
-        expect { jahuty.snippets.render 62, params: params }.to be_cache_miss
+          expect { jahuty.snippets.render 1 }.to be_cache_hit
+          expect { jahuty.snippets.render 62 }.to be_cache_hit
+          expect { jahuty.snippets.render 102 }.to be_cache_hit
+        end
       end
-    end
 
-    describe 'user renders collection' do
-      it 'renders the collection' do
-        renders = jahuty.snippets.all_renders 'test', params: {
-          '*' => { foo: 'foo' },
-          '62' => { bar: 'bar' }
-        }
+      context 'with parameters' do
+        let(:params) { { '*' => { foo: 'foo' }, '62' => { bar: 'bar' } } }
+        let(:renders) { jahuty.snippets.all_renders 'test', params: params }
 
-        expect(renders.count).to be(2)
-        expect(renders).to include(
-          an_object_having_attributes(content: '<p>This is my first snippet!</p>'),
-          an_object_having_attributes(content: '<p>This foo is bar.</p>')
-        )
+        it 'renders the collection' do
+          expect(renders).to include(
+            an_object_having_attributes(content: '<p>This is my first snippet!</p>'),
+            an_object_having_attributes(content: '<p>This foo is bar.</p>'),
+            an_object_having_attributes(content: '<p>This content is published.</p>')
+          )
+        end
 
-        params = { foo: 'foo' }
-        expect { jahuty.snippets.render 1, params: params }.to be_cache_hit
+        it 'caches the renders' do
+          renders
 
-        params = { foo: 'foo', bar: 'bar' }
-        expect { jahuty.snippets.render 62, params: params }.to be_cache_hit
+          params = { foo: 'foo' }
+          expect { jahuty.snippets.render 1, params: params }.to be_cache_hit
 
-        params = { foo: 'qux', bar: 'quux' }
-        expect { jahuty.snippets.render 62, params: params }.to be_cache_miss
+          params = { foo: 'foo', bar: 'bar' }
+          expect { jahuty.snippets.render 62, params: params }.to be_cache_hit
+
+          params = { foo: 'qux', bar: 'quux' }
+          expect { jahuty.snippets.render 62, params: params }.to be_cache_miss
+        end
       end
-    end
 
-    describe 'user has problem' do
-      it 'raises error' do
-        expect { jahuty.snippets.render(999) }.to raise_error(Exception::Error)
+      context 'with latest content' do
+        let(:render) { jahuty.snippets.all_renders 'test', prefer_latest: 1 }
+
+        it 'renders the snippet' do
+          expect(render).to include(
+            an_object_having_attributes(content: '<p>This content is latest.</p>'),
+          )
+        end
+      end
+
+      context 'with a problem' do
+        let(:tag) { SecureRandom.hex(8) }  # Hopefully, a tag we never use.
+
+        it 'raises error' do
+          expect { jahuty.snippets.all_renders(tag) }.to raise_error(Exception::Error)
+        end
       end
     end
   end
