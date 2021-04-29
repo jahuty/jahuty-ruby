@@ -13,7 +13,7 @@ It is multi-platform, and we strive to make it run equally well on Windows, Linu
 To install, add this line to your application's `Gemfile` and run `bundle install`:
 
 ```ruby
-gem 'jahuty', '~> 3.2'
+gem 'jahuty', '~> 3.3'
 ```
 
 ## Usage
@@ -64,9 +64,35 @@ renders = jahuty.snippets.all_renders 'YOUR_TAG'
 renders.each { |render| puts render }
 ```
 
-## Parameters
+## Rendering content
 
-You can [pass parameters](https://docs.jahuty.com/liquid/parameters) into your renders using the `params` option:
+You can use the `prefer_latest` configuration option to render a snippet's _latest_ content to your team in _development_ and its _published_ content to your customers in _production_.
+
+By default, Jahuty will render a snippet's _published_ content, the content that existed the last time someone clicked the "Publish" button, to avoid exposing your creative process to customers.
+
+To render a snippet's _latest_ content, the content that currently exists in the editor, you can use the `prefer_latest` configuration option at the library or render level:
+
+```ruby
+jahuty = Jahuty::Client.new api_key: 'YOUR_API_KEY', prefer_latest: true
+```
+
+You can also prefer the latest content (or not) for a single render:
+
+```ruby
+# Render the _published_ content for all snippets...
+jahuty = Jahuty::Client.new api_key: 'YOUR_API_KEY'
+
+# ... except, render the _latest_ content for this one.
+jahuty.snippets.render YOUR_SNIPPET_ID, prefer_latest: true
+```
+
+## Passing dynamic parameters
+
+You can use the _same_ snippet to generate _different_ content by defining [variables](https://docs.jahuty.com/liquid/variables) in your snippets and setting their values via [parameters](https://docs.jahuty.com/liquid/parameters).
+
+### Snippet parameters
+
+Use the `params` option to pass parameters into your snippet:
 
 ```ruby
 jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
@@ -74,11 +100,15 @@ jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
 jahuty.snippets.render YOUR_SNIPPET_ID, params: { foo: 'bar' }
 ```
 
-The parameters above would be equivalent to [assigning the variable](https://docs.jahuty.com/liquid/variables) below in your snippet:
+The parameters above would be equivalent to assigning the following variable in your snippet:
 
 ```html
 {% assign foo = "bar" %}
 ```
+
+### Collection parameters
+
+Collection parameters use a slightly different syntax.
 
 If you're rendering a collection, the first dimension of the `params` key determines the parameters' scope. Use an asterisk key (`*`) to pass the same parameters to all snippets, or use a snippet id as key to pass parameters to a specific snippet.
 
@@ -104,7 +134,7 @@ jahuty.snippets.all_renders 'YOUR_TAG', params: {
 }
 ```
 
-## Caching
+## Caching for performance
 
 You can use caching to control how frequently this library requests the latest content from Jahuty's API.
 
@@ -218,7 +248,7 @@ jahuty2 = Jahuty::Client.new(api_key: 'YOUR_API_KEY', expires_in: 60)
 jahuty2.snippets.render 1, expires_in: 0
 ```
 
-## Errors
+## Handling errors
 
 If an error occurs with [Jahuty's API](https://docs.jahuty.com/api#errors), a `Jahuty::Exception::Error` will be raised:
 
