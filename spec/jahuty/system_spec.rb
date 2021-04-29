@@ -100,7 +100,7 @@ module Jahuty
       end
     end
 
-    describe '#all_renders' do
+    describe 'user renders many snippets' do
       context 'without parameters' do
         let(:renders) { jahuty.snippets.all_renders 'test' }
 
