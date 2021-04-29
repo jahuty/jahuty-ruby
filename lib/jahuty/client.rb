@@ -5,11 +5,12 @@ require 'mini_cache'
 module Jahuty
   # Executes requests against Jahuty's API and returns resources.
   class Client
-    def initialize(api_key:, cache: nil, expires_in: nil)
-      @api_key    = api_key
-      @cache      = Cache::Facade.new(cache || ::MiniCache::Store.new)
+    def initialize(api_key:, cache: nil, expires_in: nil, prefer_latest: false)
+      @api_key = api_key
+      @cache = Cache::Facade.new(cache || ::MiniCache::Store.new)
       @expires_in = expires_in
-      @services   = {}
+      @services = {}
+      @prefer_latest = prefer_latest
     end
 
     # Allows services to be accessed as properties (e.g., jahuty.snippets).
@@ -17,7 +18,7 @@ module Jahuty
       if args.empty? && name == :snippets
         unless @services.key?(name)
           @services[name] = Service::Snippet.new(
-            client: self, cache: @cache, expires_in: @expires_in
+            client: self, cache: @cache, expires_in: @expires_in, prefer_latest: @prefer_latest
           )
         end
         @services[name]

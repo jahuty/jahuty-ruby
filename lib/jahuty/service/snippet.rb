@@ -4,14 +4,15 @@ module Jahuty
   module Service
     # A service for interacting with snippets.
     class Snippet < Base
-      def initialize(client:, cache:, expires_in: nil)
+      def initialize(client:, cache:, expires_in: nil, prefer_latest: false)
         super(client: client)
 
         @cache = cache
         @expires_in = expires_in
+        @prefer_latest = prefer_latest
       end
 
-      def all_renders(tag, params: {}, expires_in: nil, prefer_latest: false)
+      def all_renders(tag, params: {}, expires_in: @expires_in, prefer_latest: @prefer_latest)
         renders = index_renders tag: tag, params: params, prefer_latest: prefer_latest
 
         cache_renders renders: renders, params: params, expires_in: expires_in
@@ -19,9 +20,7 @@ module Jahuty
         renders
       end
 
-      def render(snippet_id, params: {}, expires_in: nil, prefer_latest: false)
-        expires_in ||= @expires_in
-
+      def render(snippet_id, params: {}, expires_in: @expires_in, prefer_latest: @prefer_latest)
         key = cache_key snippet_id: snippet_id, params: params
 
         render = @cache.read(key)
