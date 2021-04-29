@@ -152,7 +152,7 @@ module Jahuty
 
         it 'renders the snippet' do
           expect(render).to include(
-            an_object_having_attributes(content: '<p>This content is latest.</p>'),
+            an_object_having_attributes(content: '<p>This content is latest.</p>')
           )
         end
       end
