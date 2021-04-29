@@ -84,6 +84,21 @@ module Jahuty
           end
         end
 
+        context 'with prefer_latest option' do
+          let(:expected_attr) do
+            { resource: 'render', params: { tag: 'foo', latest: 1 } }
+          end
+
+          before { allow(client).to receive(:request).and_return([]) }
+
+          it 'has latest' do
+            snippets.all_renders 'foo', prefer_latest: true
+
+            expect(client).to have_received(:request)
+              .with(having_attributes(expected_attr))
+          end
+        end
+
         context 'when a collection is returned' do
           before { allow(client).to receive(:request).and_return([render]) }
 
@@ -196,6 +211,19 @@ module Jahuty
 
           it 'does include params' do
             snippets.render 1, params: { foo: 'bar' }
+
+            expect(client).to have_received(:request)
+              .with(having_attributes(expected_attr))
+          end
+        end
+
+        context 'with prefer_latest option' do
+          let(:expected_attr) do
+            { id: 1, resource: 'render', params: { latest: 1 } }
+          end
+
+          it 'has latest' do
+            snippets.render 1, prefer_latest: true
 
             expect(client).to have_received(:request)
               .with(having_attributes(expected_attr))
