@@ -13,9 +13,9 @@ module Jahuty
 
         @resources ||= ::Jahuty::Resource::Factory.new
 
-        if collection?(action, payload)
+        if collection?(payload)
           payload.map { |data| @resources.call resource_name, data }
-        elsif resource?(action, payload)
+        elsif resource?(payload)
           @resources.call resource_name, payload
         else
           raise ArgumentError, 'Action and payload mismatch'
@@ -24,7 +24,7 @@ module Jahuty
 
       private
 
-      def collection?(action, payload)
+      def collection?(payload)
         payload.is_a?(::Array)
       end
 
@@ -47,7 +47,7 @@ module Jahuty
           (response.status < 200 || response.status >= 300)
       end
 
-      def resource?(action, payload)
+      def resource?(payload)
         payload.is_a?(::Object)
       end
 
