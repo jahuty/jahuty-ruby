@@ -15,13 +15,13 @@ module Jahuty
       def all_renders(tag, params: {}, expires_in: @expires_in, prefer_latest: @prefer_latest)
         renders = index_renders tag: tag, params: params, prefer_latest: prefer_latest
 
-        cache_renders renders: renders, params: params, expires_in: expires_in
+        cache_renders renders: renders, params: params, expires_in: expires_in, latest: prefer_latest
 
         renders
       end
 
       def render(snippet_id, params: {}, expires_in: @expires_in, prefer_latest: @prefer_latest)
-        key = cache_key snippet_id: snippet_id, params: params
+        key = cache_key snippet_id: snippet_id, params: params, latest: prefer_latest
 
         render = @cache.read(key)
 
@@ -38,17 +38,16 @@ module Jahuty
 
       private
 
-      def cache_key(snippet_id:, params: {})
+      def cache_key(snippet_id:, params: {}, latest: false)
         fingerprint = Digest::MD5.new
         fingerprint << "snippets/#{snippet_id}/render/"
         fingerprint << params.to_json
+        fingerprint << '/latest' if latest
 
         "jahuty_#{fingerprint.hexdigest}"
       end
 
-      def cache_renders(renders:, params:, expires_in: nil)
-        expires_in ||= @expires_in
-
+      def cache_renders(renders:, params:, expires_in: @expires_in, latest: false)
         return if renders.nil?
 
         return unless cacheable?(expires_in)
@@ -59,7 +58,7 @@ module Jahuty
           local_params = params[render.snippet_id.to_s] || {}
           render_params = ::Jahuty::Util.deep_merge global_params, local_params
 
-          key = cache_key snippet_id: render.snippet_id, params: render_params
+          key = cache_key snippet_id: render.snippet_id, params: render_params, latest: latest
 
           @cache.write key, render, expires_in: expires_in
         end

@@ -93,6 +93,19 @@ module Jahuty
         end
       end
 
+      context 'with published cache and latest content' do
+        let(:render) { jahuty.snippets.render 102, prefer_latest: 1 }
+
+        # Cache the published content.
+        before { jahuty.snippets.render 102 }
+
+        it 'renders the snippet' do
+          expect(render).to have_attributes(
+            content: '<p>This content is latest.</p>'
+          )
+        end
+      end
+
       context 'with a problem' do
         it 'raises error' do
           expect { jahuty.snippets.render(999) }.to raise_error(Exception::Error)
