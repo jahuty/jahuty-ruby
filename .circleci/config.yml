@@ -33,7 +33,7 @@ jobs:
                               --out test_results/rspec.xml \
                               --format progress \
                               $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
-  test-26:
+  test-30:
     docker:
       - image: cimg/ruby:3.0.2
     executor: ruby/default
