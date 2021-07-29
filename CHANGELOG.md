@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0] - 2021-07-29
+
+### Added
+
+- Support for Ruby 3.
+- Builds for the latest versions of Ruby 2.6.x, 2.7.x, and 3.0.x.
+- A `location` parameter to the `render` method to enable display tracking.
+
 ## 3.3.1 - 2021-05-02
 
 ### Fixed

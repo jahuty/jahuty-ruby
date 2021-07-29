@@ -229,6 +229,19 @@ module Jahuty
               .with(having_attributes(expected_attr))
           end
         end
+
+        context 'with location option' do
+          let(:expected_attrs) do
+            { id: 1, resource: 'render', params: { location: 'https://example.com' } }
+          end
+
+          it 'has latest' do
+            snippets.render 1, location: 'https://example.com'
+
+            expect(client).to have_received(:request)
+              .with(having_attributes(expected_attrs))
+          end
+        end
       end
     end
   end

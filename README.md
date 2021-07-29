@@ -6,14 +6,18 @@ Welcome to the [Ruby SDK](https://docs.jahuty.com/sdks/ruby) for [Jahuty's API](
 
 ## Installation
 
-This library requires [Ruby 2.6+](https://www.ruby-lang.org/en/downloads/releases/).
+This library is tested with the following [Ruby versions](https://www.ruby-lang.org/en/downloads/releases/):
+
+* MRI 2.6.8
+* MRI 2.7.4
+* MRI 3.0.2
 
 It is multi-platform, and we strive to make it run equally well on Windows, Linux, and OSX.
 
 To install, add this line to your application's `Gemfile` and run `bundle install`:
 
 ```ruby
-gem 'jahuty', '~> 3.3'
+gem 'jahuty', '~> 3.4'
 ```
 
 ## Usage
@@ -33,11 +37,8 @@ jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
 
 render = jahuty.snippets.render YOUR_SNIPPET_ID
 
-a = render.to_s
-
-b = render.content
-
-a == b  # returns true
+render.to_s
+render.content
 ```
 
 In an HTML view:
@@ -61,16 +62,14 @@ jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
 
 renders = jahuty.snippets.all_renders 'YOUR_TAG'
 
-renders.each { |render| puts render }
+renders.each { |r| puts r }
 ```
 
 ## Rendering content
 
-You can use the `prefer_latest` configuration option to render a snippet's _latest_ content to your team in _development_ and its _published_ content to your customers in _production_.
-
 By default, Jahuty will render a snippet's _published_ content, the content that existed the last time someone clicked the "Publish" button, to avoid exposing your creative process to customers.
 
-To render a snippet's _latest_ content, the content that currently exists in the editor, you can use the `prefer_latest` configuration option at the library or render level:
+You can use the `prefer_latest` configuration option, however, to render a snippet's _latest_ content, the content that currently exists in the editor. This allows you to render a snippet's _latest_ content to your team in _development_ and its _published_ content to your customers in _production_.
 
 ```ruby
 jahuty = Jahuty::Client.new api_key: 'YOUR_API_KEY', prefer_latest: true
@@ -134,6 +133,19 @@ jahuty.snippets.all_renders 'YOUR_TAG', params: {
 }
 ```
 
+## Tracking renders
+
+You can record where snippets are rendered using the `location` configuration option. This helps your team preview their changes, and it helps you find and replace deprecated snippets.
+
+```ruby
+jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
+
+render = jahuty.snippets.render YOUR_SNIPPET_ID, location: 'https://example.com'
+]);
+```
+
+Note, this configuration option is only supported by the `render` method, not the `all_renders` method, and locations are only reported when a request is sent to Jahuty's API. As a result of this limitation, locations may not be reported in all scenarios. For example, if a call to `render` results in a cache hit, the location will not be reported.
+
 ## Caching for performance
 
 You can use caching to control how frequently this library requests the latest content from Jahuty's API.
@@ -165,10 +177,7 @@ A persistent cache allows renders to be cached across multiple requests. This re
 To configure Jahuty to use your persistent cache, pass a cache implementation to the client via the `cache` configuration option:
 
 ```ruby
-jahuty = new Jahuty::Client.new(
-  api_key: 'YOUR_API_KEY',
-  cache: cache
-)
+jahuty = new Jahuty::Client.new(api_key: 'YOUR_API_KEY', cache: cache)
 ```
 
 The persistent cache implementation you choose and configure is up to you. There are many libraries available, and most frameworks provide their own. At this time, we support any object which responds to `get(key)`/`set(key, value, expires_in:)` or `read(key)`/`write(key, value, expires_in:)` including [ActiveSupport::Cache::Store](https://api.rubyonrails.org/classes/ActiveSupport/Cache/Store.html#method-i-fetch).
@@ -190,11 +199,8 @@ You can usually configure your caching implementation with a default `:expires_i
 You can configure a default `:expires_in` for all of this library's renders by passing an integer number of seconds via the client's `:expires_in` configuration option:
 
 ```ruby
-jahuty = Jahuty::Client.new(
-  api_key: 'YOUR_API_KEY',
-  cache: cache,
-  expires_in: 60  # <- Cache all renders for sixty seconds
-)
+ # Cache all renders for sixty seconds.
+jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY', cache: cache, expires_in: 60)
 ```
 
 If this library's default `:expires_in` is set, it will take precedence over the default `:expires_in` of the caching implementation.
@@ -224,11 +230,11 @@ By default, this library will cache each render returned by `all_renders`:
 jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY', cache: cache)
 
 # Sends a network request, caches each render, and returns the collection.
-jahuty.snippets.all_renders 'YOUR_TAG';
+jahuty.snippets.all_renders 'YOUR_TAG'
 
 # If this reder exists in the collection, the cached value will be used instead
 # of sending a network request for the latest version.
-jahuty.snippets.render YOUR_SNIPPET_ID;
+jahuty.snippets.render YOUR_SNIPPET_ID
 ```
 
 This is a powerful feature, especially when combined with a persistent cache. Using the `all_renders` method, you can render and cache an arbitrarily large chunk of content with a single network request. Because any subsequent call to `render` a snippet in the collection will use its cached version, you can reduce the number of network requests to load your content.
