@@ -20,15 +20,15 @@ module Jahuty
         renders
       end
 
-      def render(snippet_id, params: {}, expires_in: @expires_in, prefer_latest: @prefer_latest)
+      def render(snippet_id, params: {}, expires_in: @expires_in, prefer_latest: @prefer_latest, location: nil)
         key = cache_key snippet_id: snippet_id, params: params, latest: prefer_latest
 
-        render = @cache.read(key)
+        render = @cache.read key
 
         @cache.delete key unless render.nil? || cacheable?(expires_in)
 
         if render.nil?
-          render = show_render snippet_id: snippet_id, params: params, prefer_latest: prefer_latest
+          render = show_render snippet_id: snippet_id, params: params, prefer_latest: prefer_latest, location: location
 
           @cache.write key, render, expires_in: expires_in if cacheable?(expires_in)
         end
@@ -81,10 +81,11 @@ module Jahuty
         @client.request action
       end
 
-      def show_render(snippet_id:, params: {}, prefer_latest: false)
+      def show_render(snippet_id:, params: {}, prefer_latest: false, location: nil)
         request_params = {}
         request_params[:params] = params.to_json unless params.empty?
         request_params[:latest] = 1 if prefer_latest
+        request_params[:location] = location unless location.nil?
 
         action = ::Jahuty::Action::Show.new(
           id: snippet_id,
