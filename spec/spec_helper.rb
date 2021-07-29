@@ -6,7 +6,6 @@ SimpleCov.start
 require 'simplecov-cobertura'
 SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
 
-require 'bundler/setup'
 require 'jahuty'
 
 require 'webmock/rspec'
