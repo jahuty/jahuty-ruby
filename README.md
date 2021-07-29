@@ -141,7 +141,6 @@ You can record where snippets are rendered using the `location` configuration op
 jahuty = Jahuty::Client.new(api_key: 'YOUR_API_KEY')
 
 render = jahuty.snippets.render YOUR_SNIPPET_ID, location: 'https://example.com'
-]);
 ```
 
 Note, this configuration option is only supported by the `render` method, not the `all_renders` method, and locations are only reported when a request is sent to Jahuty's API. As a result of this limitation, locations may not be reported in all scenarios. For example, if a call to `render` results in a cache hit, the location will not be reported.
