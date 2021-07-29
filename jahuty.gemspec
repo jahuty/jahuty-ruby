@@ -4,7 +4,6 @@ lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require 'jahuty/version'
-require 'rake/file_list'
 
 Gem::Specification.new do |spec|
   spec.name          = 'jahuty'
@@ -23,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.metadata['source_code_uri'] = 'https://github.com/jahuty/jahuty-ruby'
   spec.metadata['changelog_uri'] = 'https://github.com/jahuty/jahuty-ruby/blob/master/CHANGELOG.md'
 
-  spec.files         = Rake::FileList['**/*'].exclude(*File.read('.gitignore').split)
+  spec.files         = Dir['lib/**/*'] + %w[CHANGELOG.md LICENSE README.md]
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
