@@ -230,7 +230,7 @@ module Jahuty
           end
         end
 
-        context 'with prefer_latest option' do
+        context 'with location option' do
           let(:expected_attrs) do
             { id: 1, resource: 'render', params: { location: 'https://example.com' } }
           end
