@@ -18,7 +18,7 @@ module Jahuty
         raise ArgumentError.new, 'Key :type missing' unless data.key?(:type)
         raise ArgumentError.new, 'Key :detail missing' unless data.key?(:detail)
 
-        Problem.new(data.slice(:status, :type, :detail))
+        Problem.new(**data.slice(:status, :type, :detail))
       end
     end
   end

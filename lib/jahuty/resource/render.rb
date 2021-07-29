@@ -15,7 +15,7 @@ module Jahuty
         raise ArgumentError.new, 'Key :content missing' unless data.key?(:content)
         raise ArgumentError.new, 'Key :snippet_id missing' unless data.key?(:snippet_id)
 
-        Render.new(data.slice(:content, :snippet_id))
+        Render.new(**data.slice(:content, :snippet_id))
       end
 
       def to_s
